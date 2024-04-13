@@ -1,25 +1,58 @@
 <template>
   <v-responsive aspect-ratio="16/9">
     <v-container class="page">
-      <v-navigation-drawer v-model="drawer" app permanent width="400" color="amber-darken-4">
+      <v-navigation-drawer v-model="drawer" app permanent width="385" color="#FF9943">
         <v-app-bar-title>Cadastre-se</v-app-bar-title>
         <v-form class="form">
-          <v-text-field label="Nome Fantasia" variant="outlined" bg-color="white" required></v-text-field>
+          <v-text-field 
+          v-model="fantasyName"
+          label="Nome Fantasia" 
+          placeholder="Empresa XPTO"
+          variant="outlined" 
+          bg-color="white" 
+          ></v-text-field>
 
-          <v-text-field label="Telefone (+DDD)" variant="outlined" bg-color="white" required></v-text-field>
+          <v-text-field 
+          v-model="numberPhone"
+          label="Telefone (+DDD)" 
+          placeholder="11 99999-9999"
+          :rules="[rules.required, rules.phoneFormat]"
+          variant="outlined" 
+          bg-color="white" 
+          ></v-text-field>
 
-          <v-text-field label="Email" variant="outlined" bg-color="white" required></v-text-field>
+          <v-text-field 
+          v-model="email"
+          placeholder="meuemail@email.com"
+          :rules="[rules.required, rules.email]"
+          label="Email" 
+          variant="outlined" 
+          bg-color="white" 
+          ></v-text-field>
 
-          <v-text-field v-model="password" label="Crie sua senha" type="password" variant="outlined"
-            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-            :rules="[rules.required, rules.min8chars, rules.uppercase, rules.lowercase]"
-            :type="show1 ? 'text' : 'password'" bg-color="white" required></v-text-field>
+          <v-text-field 
+          v-model="password" 
+          label="Crie sua senha" 
+          type="password" 
+          variant="outlined"
+          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+          :rules="[rules.required, rules.min8chars, rules.uppercase, rules.lowercase]"
+          :type="show1 ? 'text' : 'password'" 
+          bg-color="white" 
+          required
+          ></v-text-field>
 
-          <v-text-field v-model="confirmPassword" label="Confirme sua senha" type="password" variant="outlined"
-            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.matchPassword]"
-            :type="show1 ? 'text' : 'password'" bg-color="white" required></v-text-field>
+          <v-text-field 
+          label="Confirme sua senha" 
+          type="password" 
+          variant="outlined"
+          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" 
+          :rules="[rules.required, rules.matchPassword]"
+          :type="show1 ? 'text' : 'password'" 
+          bg-color="white"
+          ></v-text-field>
 
-          <v-btn class="conclusion" color="green">Concluir</v-btn>
+          <v-btn class="conclusion" color="green" @click="register">Concluir</v-btn>
         </v-form>
         <div class="login">
           <h4>Já tem uma conta?</h4>
@@ -31,11 +64,16 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
+  name: 'Register-page',
   data() {
     return {
+      fantasyName: '',
+      numberPhone: '',
+      email: '',
       password: '',
-      confirmPassword: '',
       drawer: true,
       show1: false,
       rules: {
@@ -44,11 +82,31 @@ export default {
         uppercase: value => /[A-Z]/.test(value) || 'Pelo menos uma letra maiúscula',
         lowercase: value => /[a-z]/.test(value) || 'Pelo menos uma letra minúscula',
         matchPassword: (value) => value === this.password || 'As senhas não coincidem.',
+        email: value => {
+          const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+          return pattern.test(value) || 'Email inválido';
+        },
+        phoneFormat: value => {
+          const pattern = /^\d{2}\d{5}\d{4}$/;
+          return pattern.test(value) || 'Telefone inválido';
+        },
       },
     };
   },
-  methods: {
-
+  methods:{
+    async register() {
+      try {
+        const response = await axios.post('/register', {
+          fantasyName: this.fantasyName,
+          numberPhone: this.numberPhone,
+          email: this.email,
+          password: this.password
+        });
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 };
 </script>
