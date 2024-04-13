@@ -18,10 +18,13 @@ export default{
           email: this.email,
           password: this.password,
         });
-        router.push({ name: 'home' }); //redireciona para home se logar
+        router.push({ name: 'home' });
       } catch (error) {
         console.error('Erro durante o login:', error);
       }
+    },
+    goTregister() {
+      this.$router.push({ name: 'register' });
     }
   }
 }
@@ -82,6 +85,7 @@ export default{
               class="btn-cadst"
               color="blue"
               width="150"
+              @click="goTregister"
               >
               Cadastre-se
             </v-btn>
