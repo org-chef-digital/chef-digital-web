@@ -67,7 +67,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'Register-page',
+  name: 'register',
   data() {
     return {
       fantasyName: '',
