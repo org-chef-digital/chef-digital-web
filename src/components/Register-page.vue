@@ -13,7 +13,7 @@
           ></v-text-field>
 
           <v-text-field 
-          v-model="numberPhone"
+          v-model="phone"
           label="Telefone (+DDD)" 
           placeholder="11 99999-9999"
           :rules="[rules.required, rules.phoneFormat]"
@@ -71,7 +71,7 @@ export default {
   data() {
     return {
       fantasyName: '',
-      numberPhone: '',
+      phone: '',
       email: '',
       password: '',
       drawer: true,
@@ -96,9 +96,9 @@ export default {
   methods:{
     async register() {
       try {
-        const response = await axios.post('/register', {
+        const response = await axios.post('users/register', {
           fantasyName: this.fantasyName,
-          numberPhone: this.numberPhone,
+          phone: this.phone,
           email: this.email,
           password: this.password
         });
