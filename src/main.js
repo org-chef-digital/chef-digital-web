@@ -4,11 +4,15 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 
+
 // Plugins
 import { registerPlugins } from '@/plugins'
 
 // Components
 import App from './App.vue'
+//axios
+import axios from 'axios'
+axios.defaults.baseURL = 'http://localhost:3000/'
 
 // Composables
 import { createApp } from 'vue'

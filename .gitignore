@@ -5,6 +5,10 @@ node_modules
 # local env files
 .env.local
 .env.*.local
+.env
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Log files
 npm-debug.log*
@@ -20,11 +24,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
-
-# dotenv environment variable files
-.env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
