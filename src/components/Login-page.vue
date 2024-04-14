@@ -7,15 +7,15 @@ export default{
       rules: {
         required: value => !!value || 'Campo obrigatório.',
       },
-      email: '',
+      fantasyName: '',
       password: '',
     };
   },
   methods: {
     async login() {
       try {
-        const { data } = await axios.post('/login', {
-          email: this.email,
+        const response = await axios.post('/auth/signin', {
+          fantasyName: this.fantasyName,
           password: this.password,
         });
         router.push({ name: 'home' });
@@ -50,12 +50,12 @@ export default{
             <v-app-bar-title class="tl text-lg-center">Login</v-app-bar-title>
 
             <v-text-field 
-              v-model="email"
+              v-model="fantasyName"
               bg-color="white"
-              hint="Insira seu email de acesso"
-              label="Email" 
+              hint="Insira seu nome fantasia de acesso"
+              label="fantasyName" 
               placeholder="john123@example.com" 
-              type="email"
+              type="fantasyName"
               :rules="[rules.required]" 
               variant="outlined">
           </v-text-field>
@@ -75,7 +75,8 @@ export default{
             <v-btn
               class="btn-entrar"
               color="green"
-              width="344">
+              width="344"
+              @click="login">
               Entrar
             </v-btn>
           
