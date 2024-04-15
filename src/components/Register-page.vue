@@ -33,22 +33,21 @@
           <v-text-field 
           v-model="password" 
           label="Crie sua senha" 
-          type="password" 
           variant="outlined"
-          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+          :append-icon="visibility === 'password' ? 'mdi-eye' : 'mdi-eye-off'"
           :rules="[rules.required, rules.min8chars, rules.uppercase, rules.lowercase]"
-          :type="show1 ? 'text' : 'password'" 
+          :type="visibility" 
+          @click:append="switchVisibility"
           bg-color="white" 
-          required
           ></v-text-field>
 
           <v-text-field 
           label="Confirme sua senha" 
-          type="password" 
           variant="outlined"
-          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" 
+          :append-icon="visibility === 'password' ? 'mdi-eye' : 'mdi-eye-off'" 
           :rules="[rules.required, rules.matchPassword]"
-          :type="show1 ? 'text' : 'password'" 
+          :type="visibility" 
+          @click:append="switchVisibility"
           bg-color="white"
           ></v-text-field>
 
@@ -56,7 +55,7 @@
         </v-form>
         <div class="login">
           <h4>Já tem uma conta?</h4>
-          <v-btn class="returnLogin" color="primary">Faça login</v-btn>
+          <v-btn class="returnLogin" color="primary" @click="backStage">Faça login</v-btn>
         </div>
       </v-navigation-drawer>
     </v-container>
@@ -70,6 +69,7 @@ export default {
   name: 'register',
   data() {
     return {
+      visibility: 'password',
       fantasyName: '',
       phone: '',
       email: '',
@@ -94,6 +94,13 @@ export default {
     };
   },
   methods:{
+    switchVisibility() {
+      if (this.visibility === 'password') {
+        this.visibility = 'text';
+      } else {
+        this.visibility = 'password';
+      }
+    },
     async register() {
       try {
         const response = await axios.post('users/register', {
@@ -103,10 +110,14 @@ export default {
           password: this.password
         });
         console.log(response.data);
+        this.$router.push({ name: 'login' });
       } catch (error) {
         console.error(error);
       }
-    }
+    },
+    backStage() {
+      this.$router.push({ name: 'login' });
+    },
   }
 };
 </script>
@@ -135,12 +146,12 @@ h4 {
   color: #000;
   font-size: 25px;
   font-family: 'Roboto', sans-serif;
-  margin-top: 5%;
+  margin-top: 15%;
   text-align: center;
 }
 
 .v-text-field {
-  margin: 0.2%;
+  margin: 1%;
   width: 60%;
 }
 
