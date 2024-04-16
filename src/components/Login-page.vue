@@ -7,7 +7,7 @@ export default{
       rules: {
         required: value => !!value || 'Campo obrigatório.',
       },
-      fantasyName: '',
+      email: '',
       password: '',
     };
   },
@@ -15,9 +15,10 @@ export default{
     async login() {
       try {
         const response = await axios.post('/auth/signin', {
-          fantasyName: this.fantasyName,
+          email: this.email,
           password: this.password,
         });
+        console.log('Login efetuado com sucesso:', response.data);
         router.push({ name: 'home' });
       } catch (error) {
         console.error('Erro durante o login:', error);
@@ -50,12 +51,12 @@ export default{
             <v-app-bar-title class="tl text-lg-center">Login</v-app-bar-title>
 
             <v-text-field 
-              v-model="fantasyName"
+              v-model="email"
               bg-color="white"
               hint="Insira seu nome fantasia de acesso"
-              label="fantasyName" 
+              label="Email" 
               placeholder="john123@example.com" 
-              type="fantasyName"
+              type="email"
               :rules="[rules.required]" 
               variant="outlined">
           </v-text-field>
