@@ -13,8 +13,8 @@ const router = createRouter({
 
   routes: [
     {
-      path: "/",
-      name: "login",
+      path: '/',
+      name: 'login',
       component: () => import("../components/Login-page.vue"),
     },
     {
@@ -23,8 +23,8 @@ const router = createRouter({
       component: () => import('../components/Register-page.vue')
     },
     {
-      path: "/home",
-      name: "home",
+      path: '/home',
+      name: 'home',
       component:() => import("../components/Home-page.vue"),
     },
   ],

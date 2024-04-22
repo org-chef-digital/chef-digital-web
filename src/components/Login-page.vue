@@ -3,7 +3,7 @@ import axios from 'axios';
 export default{
   data() {
     return {
-      show1: false,
+      visibility: 'password',
       rules: {
         required: value => !!value || 'Campo obrigatório.',
       },
@@ -19,13 +19,20 @@ export default{
           password: this.password,
         });
         console.log('Login efetuado com sucesso:', response.data);
-        router.push({ name: 'home' });
+        this.$router.push({ name: 'home' });
       } catch (error) {
         console.error('Erro durante o login:', error);
       }
     },
     goTregister() {
       this.$router.push({ name: 'register' });
+    },
+    switchVisibility() {
+      if (this.visibility === 'password') {
+        this.visibility = 'text';
+      } else {
+        this.visibility = 'password';
+      }
     }
   }
 }
@@ -66,10 +73,10 @@ export default{
               bg-color="white"
               hint="Insira sua senha para acessar"
               label="Senha"
-              type="password"
-              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="visibility" 
+              :append-icon="visibility === 'password' ? 'mdi-eye' : 'mdi-eye-off'"
               :rules="[rules.required]"
-              :type="show1 ? 'text':'password'"
+              @click:append="switchVisibility"
               variant="outlined">
           </v-text-field>
 
