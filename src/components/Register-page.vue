@@ -103,7 +103,7 @@ export default {
     },
     async register() {
       try {
-        const response = await axios.post('users/register', {
+        const response = await axios.post('restaurant/register', {
           fantasyName: this.fantasyName,
           phone: this.phone,
           email: this.email,
