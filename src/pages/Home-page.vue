@@ -3,7 +3,7 @@
       <v-main>
         <navbar />
         <h1>Página Home(Gestor)</h1>
-        <p>você está sob Gestão</p>
+        <p>você está sob Gestão, fique atento</p>
       </v-main>
     </v-app>
   </template>
