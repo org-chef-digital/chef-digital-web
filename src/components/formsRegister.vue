@@ -70,7 +70,6 @@
   }
   
   export default defineComponent({
-    name: 'RegisterForm',
     data() {
       return {
         visibility: 'password',

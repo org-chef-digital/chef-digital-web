@@ -1,83 +1,56 @@
+<!-- CardCategories.vue -->
+
 <template>
     <v-container>
-        <v-row>
-            <v-col v-for="(category, index) in categories" :key="category._id">
-                <v-card>
-                    <v-card-title>{{ category.name }}</v-card-title>
-                    <v-btn @click="editCategory(category)">Editar</v-btn>
-                    <v-btn @click="openModal(category._id)">Excluir</v-btn>
-
-                </v-card>
-                <v-card class="produtos">
-                    <!-- Conteúdo dos produtos relacionados à categoria -->
-                </v-card>
-            </v-col>
-        </v-row>
-
-        <modal-excluir v-model:modelValue="showModal" @confirm-delete="deleteCategory" />
+      <v-row>
+        <v-col v-for="category in categories" :key="category._id">
+          <v-card>
+            <v-card-title>{{ category.name }}</v-card-title>
+            <v-btn @click="openEditModal(category)">Editar</v-btn>
+            <v-btn @click="openConfirmationModal(category._id)">Excluir</v-btn>
+          </v-card>
+          <v-card class="produtos">
+            <!-- Conteúdo dos produtos relacionados à categoria -->
+          </v-card>
+        </v-col>
+      </v-row>
+      
     </v-container>
-</template>
-
-<script lang="ts">
-import { defineComponent, ref, PropType } from 'vue';
-import ModalExcluir from './modalExcluir.vue';
-import axios from 'axios';
+  </template>
+  
+  <script lang="ts">
+  import { defineComponent, PropType, ref } from 'vue';
 
 export default defineComponent({
-    components: {
-        ModalExcluir,
+  props: {
+    categories: {
+      type: Array as PropType<{ _id: string; name: string }[]>,
+      required: true,
     },
-    props: {
-        categories: {
-            type: Array as PropType<{ _id: string; name: string }[]>,
-            required: true,
-        },
-    },
-    setup(props, { emit }) {
-        const showModal = ref(false);
+  },
+  setup(props, { emit }) {
+    const openConfirmationModal = (categoryId: string) => {
+      emit('open-confirmation-modal', categoryId); // Emitir evento para abrir o modal de confirmação
+    };
 
-        const editCategory = (category) => {
-            console.log('Editar:', category.name);
-        };
+    const openEditModal = (category: { _id: string; name: string }) => {
+      emit('open-edit-modal', category); // Emitir evento para abrir o modal de edição
+    };
 
-        const openModal = (id: string) => {
-            showModal.value = true;
-        };
-
-        const deleteCategory = async (confirm: boolean, id: string) => {
-            if (confirm) {
-                try {
-                    console.log('Excluindo categoria:', id); // Use 'id' ao invés de 'this._id'
-                    const response = await axios.delete(`/categories/${id}`);
-                    console.log(response.data);
-                    // Remove a categoria do array após a exclusão bem-sucedida
-                    const updatedCategories = props.categories.filter((cat) => cat._id !== id);
-                    emit('category-deleted', updatedCategories);
-                    showModal.value = false;
-                } catch (error) {
-                    console.error('Erro ao excluir categoria:', error);
-                }
-            } else {
-                showModal.value = false;
-            }
-        };
-
-
-
-        return {
-            showModal,
-            editCategory,
-            openModal,
-            deleteCategory,
-        };
-    },
+    return {
+      openConfirmationModal,
+      openEditModal,
+    };
+  },
 });
-</script>
 
-<style scoped>
-.produtos {
+  </script>
+  
+  <style scoped>
+  .produtos {
     width: 800px;
     background-color: cornflowerblue;
     border: 1px solid black;
-}
-</style>
+  }
+  </style>
+  

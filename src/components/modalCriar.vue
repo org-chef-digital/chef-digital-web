@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="value">
+    <v-dialog>
       <v-card>
         <v-card-title>Nome da categoria</v-card-title>
         <v-card-text>
@@ -31,7 +31,6 @@
           const response = await axios.post('/categories', {
             name: this.categoryName,
           });
-          console.log(response.data); // Aqui você pode lidar com a resposta da API
           this.categoryName = ''; // Limpa o campo de texto após salvar
           this.$emit('update:modelValue', false); // Fecha o modal após salvar
         } catch (error) {
