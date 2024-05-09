@@ -30,7 +30,7 @@ const router = createRouter({
     {
       path: '/analysis',
       name: 'analysis',
-      component:() => import('../pages/Anal-page.vue')
+      component:() => import('../pages/Analys-page.vue')
     }
   ],
 })

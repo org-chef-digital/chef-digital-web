@@ -71,7 +71,8 @@ export default defineComponent({
           email: this.email,
           password: this.password,
         });
-        const token = response.data.data;
+        console.log(data);  
+        const token = response.data.data.access_token;
         if (token) {
           localStorage.setItem('token', token);
           this.$router.push({ name: 'home' });
