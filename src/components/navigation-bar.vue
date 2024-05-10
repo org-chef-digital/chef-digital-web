@@ -34,18 +34,64 @@
  <script setup lang="ts">
  import { ref, onMounted } from 'vue';
  import { useRouter } from 'vue-router';
+ import axios from 'axios';
+ 
  const aberto = ref(false);
  const router = useRouter();
- function toggleStatus() {
+ 
+ async function toggleStatus() {
    aberto.value = !aberto.value;
+   await updateStatus(aberto.value);
  }
+ 
+ async function getStatus() {
+   const token = localStorage.getItem('token');
+   if (!token) return;
+   const id = localStorage.getItem('id');
+   if (!id) return;
+ 
+   try {
+     const response = await axios.get(`http://localhost:3000/api/v1/restaurant/${id}/status`, {
+       headers: {
+         Authorization: `Bearer ${token}`
+       }
+     });
+     aberto.value = response.data.data;
+   } catch (error) {
+     console.error('Erro ao obter status da loja:', error);
+   }
+ }
+ 
+ async function updateStatus(status) {
+   const token = localStorage.getItem('token');
+   if (!token) return;
+   const id = localStorage.getItem('id');
+   if (!id) return;
+ 
+   try {
+     await axios.put(`http://localhost:3000/api/v1/restaurant/${id}/updateStatus`, {
+       "status": status
+     }, {
+       headers: {
+         Authorization: `Bearer ${token}`
+       }
+     });
+   } catch (error) {
+     console.error('Erro ao atualizar status da loja:', error);
+   }
+ }
+ 
  function logout() {
    localStorage.removeItem('token');
+   localStorage.removeItem('id');
    router.push({ name: 'login' });
  }
+ 
  onMounted(() => {
    if (!localStorage.getItem('token')) {
      router.push({ name: 'login' });
+   } else {
+     getStatus();
    }
  });
  </script>

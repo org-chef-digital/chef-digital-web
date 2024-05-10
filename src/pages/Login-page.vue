@@ -70,10 +70,12 @@ export default defineComponent({
         const response = await axios.post('/auth/signin', {
           email: this.email,
           password: this.password,
-        });  
+        });
         const token = response.data.data.access_token;
+        const id = response.data.data.id;
         if (token) {
           localStorage.setItem('token', token);
+          localStorage.setItem('id', id);
           this.$router.push({ name: 'home' });
         } else {
           console.error('Token JWT não encontrado na resposta.');
