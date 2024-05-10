@@ -29,7 +29,8 @@ export default defineComponent({
 
     const confirmEdit = async () => {
       try {
-        await axios.put(`/categories/${editedCategory.value}`, { name: editedCategory.value.name });
+        // console.log('editedCategory:', editedCategory.value);
+        await axios.put(`/categories/${editedCategory.value._id}`, { name: editedCategory.value.name });
         emit('confirm-edit', editedCategory.value); // Emitir evento para confirmar a edição, passando a categoria editada
         showModal.value = false;
       } catch (error) {
