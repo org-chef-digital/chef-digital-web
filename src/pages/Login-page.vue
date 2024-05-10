@@ -70,8 +70,7 @@ export default defineComponent({
         const response = await axios.post('/auth/signin', {
           email: this.email,
           password: this.password,
-        });
-        console.log(data);  
+        });  
         const token = response.data.data.access_token;
         if (token) {
           localStorage.setItem('token', token);

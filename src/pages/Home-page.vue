@@ -5,7 +5,7 @@
     <navbar />
     <buttons-categories color="#4CAF50" text="Criar categoria" @click="openModal" />
     <modal-criar v-model="showModal" @save-category="saveCategory" />
-    <modal-editar v-model="showEditModal" :category="categoryToEdit" @confirm-edit="editCategory(categoryToEdit)" />
+    <modal-editar v-model="showEditModal" :category="categoryToEdit" @confirm-edit="editCategory" />
 
     <modal-excluir v-model="showDeleteModal" :category-id="categoryIdToDelete" @confirm-delete="deleteCategory" />
     <card-categories :categories="categories" @open-edit-modal="openEditModal"
