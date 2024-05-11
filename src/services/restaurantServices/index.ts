@@ -1,6 +1,6 @@
 import { api, responseError } from '../api';
 import { ApiResponse } from '../apiTypes';
-import { Restaurant, RestaurantSignIn } from './restaurantTypes';
+import { Restaurant, RestaurantSignIn , RestaurantStatus} from './restaurantTypes';
 
 async function create(newRestaurant: Restaurant) {
     try {
@@ -30,7 +30,44 @@ async function signIn(restaurantSignIn: RestaurantSignIn) {
     }
 }
 
+async function getStatus(restaurantStatus: RestaurantStatus) {
+    try {
+        const response = await api.get<ApiResponse<RestaurantStatus>>(`restaurant/${restaurantStatus.id}/status`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        }); 
+
+        if (!response.data.success) {
+            throw new Error(response.data.message);
+        }
+
+        return response.data;
+    } catch (error) {
+        return responseError(error);
+    }
+}
+
+async function updateStatus(restaurantStatus: RestaurantStatus) {
+    try {
+        const response = await api.put<ApiResponse<RestaurantStatus>>(`restaurant/${restaurantStatus.id}/updateStatus`, restaurantStatus, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (!response.data.success) {
+            throw new Error(response.data.message);
+        }
+
+        return response.data;
+    } catch (error) {
+        return responseError(error);
+    }
+}
+
 export const restaurantServices = {
     create,
-    signIn
+    signIn, 
+    getStatus
 }

@@ -11,5 +11,6 @@ export interface RestaurantSignIn {
 }
 
 export interface RestaurantStatus {
+    id: string;
     status: boolean;
 }
