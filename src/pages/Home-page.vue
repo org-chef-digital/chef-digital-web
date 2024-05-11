@@ -18,7 +18,7 @@ import ModalCriar from '../components/modalCriar.vue';
 import ModalExcluir from '../components/modalExcluir.vue';
 import ModalEditar from '../components/modalEditar.vue';
 import CardCategories from '../components/cardCategories.vue';
-import axios from 'axios';
+import { api } from '../services/api';
 
 interface Category {
   _id: string;
@@ -58,7 +58,7 @@ export default defineComponent({
     },
     async deleteCategory(categoryId: string) {
       try {
-        const response = await axios.delete(`/categories/${categoryId}`);
+        const response = await api.delete(`/categories/${categoryId}`);
         this.categories = this.categories.filter((category: Category) => category._id !== categoryId);
         console.log(response.data);
         this.showDeleteModal = false;
@@ -68,7 +68,7 @@ export default defineComponent({
     },
     async handleSaveCategory(categoryName: string) {
       try {
-        const response = await axios.post('/categories', { name: categoryName });
+        const response = await api.post('/categories', { name: categoryName });
         const newCategory = response.data.data;
         this.categories.push(newCategory);
         console.log(response.data);
@@ -79,7 +79,7 @@ export default defineComponent({
     },
     async editCategory(editedCategory: Category) {
       try {
-        const response = await axios.put(`/categories/${editedCategory._id}`, { name: editedCategory.name });
+        const response = await api.put(`/categories/${editedCategory._id}`, { name: editedCategory.name });
         const index = this.categories.findIndex((category: Category) => category._id === editedCategory._id);
         if (index !== -1) {
           this.categories[index].name = editedCategory.name;
@@ -92,7 +92,7 @@ export default defineComponent({
     },
     async fetchCategories() {
       try {
-        const response = await axios.get('/categories/all');
+        const response = await api.get('/categories/all');
         this.categories = response.data.data;
         console.log(response.data);
       } catch (error) {

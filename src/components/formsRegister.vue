@@ -59,7 +59,7 @@
   
   <script lang="ts">
   import { defineComponent } from 'vue';
-  import axios from 'axios';
+  import {api}  from '../services/api';
   
   interface FormData {
     fantasyName: string;
@@ -112,7 +112,7 @@
     },
       async register() {
         try {
-          const response = await axios.post('restaurant/register', this.formData);
+          const response = await api.post('restaurant/register', this.formData);
           this.$router.push({ name: 'login' });
         } catch (error) {
           console.error(error);

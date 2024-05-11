@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import axios from 'axios';
+import { api } from '../services/api';
 
 interface LoginData {
   visibility: string;
@@ -67,7 +67,7 @@ export default defineComponent({
   methods: {
     async login(): Promise<void> {
       try {
-        const response = await axios.post('/auth/signin', {
+        const response = await api.post('/auth/signin', {
           email: this.email,
           password: this.password,
         });

@@ -9,3 +9,7 @@ export interface RestaurantSignIn {
     email: string;
     password: string;
 }
+
+export interface RestaurantStatus {
+    status: boolean;
+}
