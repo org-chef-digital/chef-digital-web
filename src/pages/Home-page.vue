@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import Navbar from "../components/navigation-bar.vue"
+import Navbar from "../components/navigation-bar.vue";
 import ButtonsCategories from '../components/buttonsCategories.vue';
 import ModalCriar from '../components/modalCriar.vue';
 import ModalExcluir from '../components/modalExcluir.vue';
@@ -58,9 +58,12 @@ export default defineComponent({
     },
     async deleteCategory(categoryId: string) {
       try {
-        const response = await api.delete(`/categories/${categoryId}`);
+        const response = await api.delete(`/categories/${categoryId}`, {
+          headers: {
+            Authorization: `Bearer ${this.getToken()}`,
+          },
+        });
         this.categories = this.categories.filter((category: Category) => category._id !== categoryId);
-        console.log(response.data);
         this.showDeleteModal = false;
       } catch (error) {
         console.error('Erro ao excluir categoria:', error);
@@ -68,10 +71,14 @@ export default defineComponent({
     },
     async handleSaveCategory(categoryName: string) {
       try {
-        const response = await api.post('/categories', { name: categoryName });
+        const restaurantId = localStorage.getItem("id");
+        const response = await api.post('/categories', { name: categoryName, restaurantId }, {
+          headers: {
+            Authorization: `Bearer ${this.getToken()}`,
+          },
+        });
         const newCategory = response.data.data;
         this.categories.push(newCategory);
-        console.log(response.data);
         this.showModal = false;
       } catch (error) {
         console.error('Erro ao criar categoria:', error);
@@ -79,12 +86,15 @@ export default defineComponent({
     },
     async editCategory(editedCategory: Category) {
       try {
-        const response = await api.put(`/categories/${editedCategory._id}`, { name: editedCategory.name });
+        const response = await api.put(`/categories/${editedCategory._id}`, { name: editedCategory.name }, {
+          headers: {
+            Authorization: `Bearer ${this.getToken()}`,
+          },
+        });
         const index = this.categories.findIndex((category: Category) => category._id === editedCategory._id);
         if (index !== -1) {
           this.categories[index].name = editedCategory.name;
         }
-        console.log(response.data);
         this.showEditModal = false;
       } catch (error) {
         console.error('Erro ao editar categoria:', error);
@@ -92,13 +102,16 @@ export default defineComponent({
     },
     async fetchCategories() {
       try {
-        const response = await api.get('/categories/all');
+        const restaurantId = localStorage.getItem("id");
+        const response = await api.get(`/categories/restaurant/${restaurantId}`);
         this.categories = response.data.data;
-        console.log(response.data);
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
       }
     },
+    getToken() {
+      return localStorage.getItem('token');
+    }
   },
   created() {
     this.fetchCategories();
