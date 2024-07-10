@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="showModal">
     <v-card>
-      <v-card-title>Editar categoria</v-card-title>
+      <v-card-title>Edit category</v-card-title>
       <v-card-text>
         <v-text-field v-model="category.name" label="Nome da categoria"></v-text-field>
-        <v-btn @click="confirmEdit">Salvar</v-btn>
-        <v-btn @click="cancel">Cancelar</v-btn>
+        <v-btn @click="confirmEdit">Save</v-btn>
+        <v-btn @click="cancel">Cancel</v-btn>
       </v-card-text>
     </v-card>
   </v-dialog>

@@ -1,14 +1,17 @@
 <template>
   <v-navigation-drawer color="#FF9943" width="260" location="left" permanent>
     <div class="nav">
-      <v-btn id="OorC" class="middlebtn" :class="{ 'aberto': aberto, 'fechado': !aberto }" @click="toggleStatus">
-        {{ aberto ? 'Aberto' : 'Fechado' }}
+      <v-btn id="OorC" class="middlebtn" :class="{ 'Open': open, 'Close': !open }" @click="toggleStatus">
+        {{ open ? 'Open' : 'Close' }}
       </v-btn>
       <v-btn id="btn-gest" class="middlebtn" @click="this.$router.push({ name: 'home' })">
-        Gestor
+        Manager
       </v-btn>
-      <v-btn class="middlebtn" @click="this.$router.push({ name: 'analysis' })">
-        Análise
+      <v-btn id="btn-gest" class="middlebtn" @click="this.$router.push({ name: 'analysis' })">
+        Analysis
+      </v-btn>
+      <v-btn id="link-btn" class="middlebtn" @click="copyClientPageLink">
+        Copy Client Link
       </v-btn>
       <v-btn id="log" @click="logout">
         Logout
@@ -16,18 +19,18 @@
     </div>
   </v-navigation-drawer>
 </template>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 import { api } from '../services/api';
 
-const aberto = ref(false);
+const open = ref(false);
 const router = useRouter();
 
 async function toggleStatus() {
-  aberto.value = !aberto.value;
-  await updateStatus(aberto.value);
+  open.value = !open.value;
+  await updateStatus(open.value);
 }
 
 async function getStatus() {
@@ -44,7 +47,7 @@ async function getStatus() {
     })
     aberto.value = response.data.data;
   } catch (error) {
-    console.error('Erro ao obter status da loja:', error);
+    console.error('Error status:', error);
   }
 }
 
@@ -65,7 +68,7 @@ async function updateStatus(status) {
 
     console.log('Status atualizado:', response.data.data);
   } catch (error) {
-    console.error('Erro ao atualizar status da loja:', error);
+    console.error('Error when updating status:', error);
   }
 }
 
@@ -73,6 +76,17 @@ function logout() {
   localStorage.removeItem('token');
   localStorage.removeItem('id');
   router.push({ name: 'login' });
+}
+
+function copyClientPageLink() {
+  const id = localStorage.getItem('id');
+  if (id) {
+    const clientPageLink = `${window.location.origin}/client/${id}`; // Link da página do cliente
+    navigator.clipboard.writeText(clientPageLink); // Copia o link para a área de transferência
+    console.log('Link copied:', clientPageLink);
+  } else {
+    console.error('Restaurant ID not found.');
+  }
 }
 
 onMounted(() => {
@@ -83,13 +97,14 @@ onMounted(() => {
   }
 });
 </script>
+
 <style scoped>
-.aberto {
+.Open {
   background-color: green;
   color: white;
 }
 
-.fechado {
+.Close {
   background-color: red;
   color: white;
 }
@@ -112,6 +127,10 @@ onMounted(() => {
 #log {
   position: absolute;
   bottom: 20px;
+}
+
+#link-btn{
+  background-color: rgb(178, 248, 248);
 }
 
 .middlebtn {

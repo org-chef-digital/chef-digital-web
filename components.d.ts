@@ -7,19 +7,17 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     ButtonsCategories: typeof import('./src/components/buttonsCategories.vue')['default']
     CardCategories: typeof import('./src/components/cardCategories.vue')['default']
+    CategoriesList: typeof import('./src/components/categoriesList.vue')['default']
+    FinishBuy: typeof import('./src/components/finishBuy.vue')['default']
     FormsRegister: typeof import('./src/components/formsRegister.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    HomePage: typeof import('./src/pages/Home-page.vue')['default']
-    Login: typeof import('./src/components/Login.vue')['default']
-    LoginPage: typeof import('./src/pages/Login-page.vue')['default']
-    ModalCriar: typeof import('./src/components/modalCriar.vue')['default']
-    ModalEditar: typeof import('./src/components/modalEditar.vue')['default']
-    ModalExcluir: typeof import('./src/components/modalExcluir.vue')['default']
-    NavigationBar: typeof import('./src/components/navigation-bar.vue')['default']
-    RegisterPage: typeof import('./src/pages/Register-page.vue')['default']
+    ModalCreate: typeof import('./src/components/modalCreate.vue')['default']
+    ModalDelete: typeof import('./src/components/modalDelete.vue')['default']
+    ModalEdit: typeof import('./src/components/modalEdit.vue')['default']
+    NavigationBar: typeof import('./src/components/navigationBar.vue')['default']
+    Productshowcase: typeof import('./src/components/productshowcase.vue')['default']
+    ProductShowcase: typeof import('./src/components/productShowcase.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

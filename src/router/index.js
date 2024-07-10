@@ -31,6 +31,11 @@ const router = createRouter({
       path: '/analysis',
       name: 'analysis',
       component:() => import('../pages/Analys-page.vue')
+    },
+    {
+      path: '/client/:id',
+      name: 'client',
+      component:()=> import('../pages/Client-page.vue')
     }
   ],
 })

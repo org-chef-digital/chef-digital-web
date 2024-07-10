@@ -2,11 +2,11 @@
   <v-responsive aspect-ratio="16/9">
     <v-container class="page">
       <v-navigation-drawer v-model="drawer" app permanent width="385" color="#FF9943">
-        <v-app-bar-title>Cadastre-se</v-app-bar-title>
+        <v-app-bar-title>Register</v-app-bar-title>
         <formsRegister />
         <div class="login">
-          <h4>Já tem uma conta?</h4>
-          <v-btn class="returnLogin" color="primary" @click="backStage">Faça login</v-btn>
+          <h4>Already have an account?</h4>
+          <v-btn class="returnLogin" color="primary" @click="backStage">Login</v-btn>
         </div>
       </v-navigation-drawer>
     </v-container>

@@ -2,8 +2,8 @@
     <v-form>
       <v-text-field 
       v-model="formData.fantasyName" 
-      label="Nome Fantasia" 
-      placeholder="Empresa XPTO" 
+      label="Fantasy name" 
+      placeholder="Mr.example burger" 
       variant="outlined" 
       bg-color="white" 
       :rules="rules.fantasyName"
@@ -11,8 +11,8 @@
   
       <v-text-field 
       v-model="formData.phone" 
-      label="Telefone (+DDD)" 
-      placeholder="11 99999-9999" 
+      label="DDD + Telephone" 
+      placeholder="11900000000" 
       variant="outlined" 
       bg-color="white" 
       :rules="rules.phone"
@@ -21,7 +21,7 @@
       <v-text-field 
       v-model="formData.email" 
       label="Email" 
-      placeholder="meuemail@email.com" 
+      placeholder="john123@example.com" 
       variant="outlined" 
       bg-color="white" 
       :rules="rules.email"
@@ -29,7 +29,7 @@
   
       <v-text-field 
       v-model="formData.password" 
-      label="Crie sua senha" 
+      label="Create your password" 
       variant="outlined" 
       bg-color="white" 
       :rules="rules.password" 
@@ -42,7 +42,7 @@
   
       <v-text-field 
       v-model="formData.confirmPassword"
-      label="Confirme sua senha" 
+      label="Confirm your password" 
       variant="outlined" 
       bg-color="white" 
       :rules="rules.confirmPassword" 
@@ -53,7 +53,7 @@
         </v-icon>
     </v-text-field>
   
-      <v-btn class="conclusion" color="green" @click="register">Concluir</v-btn>
+      <v-btn class="conclusion" color="green" @click="register">Finish</v-btn>
     </v-form>
   </template>
   
@@ -80,24 +80,24 @@
           password: '',
         } as FormData,
         rules: {
-          fantasyName: [(v: string) => !!v || 'Campo obrigatório'],
+          fantasyName: [(v: string) => !!v || 'Required'],
           phone: [
-            (v: string) => !!v || 'Campo obrigatório',
-            (v: string) => /^\d{2}\s\d{5}-\d{4}$/.test(v) || 'Telefone inválido',
+            (v: string) => !!v || 'Required',
+            (v: string) => /^\d{11}$/.test(v) || 'Invalid phone',
           ],
           email: [
-            (v: string) => !!v || 'Campo obrigatório',
-            (v: string) => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(v) || 'Email inválido',
+            (v: string) => !!v || 'Required',
+            (v: string) => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(v) || 'Invalid email',
           ],
           password: [
-            (v: string) => !!v || 'Campo obrigatório',
-            (v: string) => v.length >= 8 || 'Mínimo de 8 caracteres',
-            (v: string) => /[A-Z]/.test(v) || 'Pelo menos uma letra maiúscula',
-            (v: string) => /[a-z]/.test(v) || 'Pelo menos uma letra minúscula',
+            (v: string) => !!v || 'Required',
+            (v: string) => v.length >= 8 || 'Minimum 8 characters',
+            (v: string) => /[A-Z]/.test(v) || 'At least one capital letter',
+            (v: string) => /[a-z]/.test(v) || 'At least one capital letter',
           ],
           confirmPassword: [
-            (v: string) => !!v || 'Campo obrigatório',
-            (v: string) => this.matchPassword(v) || 'As senhas não coincidem.',
+            (v: string) => !!v || 'Required',
+            (v: string) => this.matchPassword(v) || 'Passwords do not match.',
           ],
         },
       };

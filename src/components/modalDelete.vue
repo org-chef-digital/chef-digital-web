@@ -1,11 +1,11 @@
 <template>
   <v-dialog>
     <v-card>
-      <v-card-title>Excluir categoria</v-card-title>
+      <v-card-title>Delete category</v-card-title>
       <v-card-text>
-        <p>Tem certeza que deseja excluir esta categoria?</p>
-        <v-btn @click="confirmDelete">Excluir</v-btn>
-        <v-btn @click="cancel">Cancelar</v-btn>
+        <p>Do you really want to delete category?</p>
+        <v-btn @click="confirmDelete">Delete</v-btn>
+        <v-btn @click="cancel">Cancel</v-btn>
       </v-card-text>
     </v-card>
   </v-dialog>

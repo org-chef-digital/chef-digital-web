@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <navbar />
-    <buttons-categories color="#4CAF50" text="Criar categoria" @click="openModal" />
-    <modal-criar v-model="showModal" @save-category="handleSaveCategory" />
-    <modal-excluir v-model="showDeleteModal" :category-id="categoryIdToDelete" @confirm-delete="deleteCategory" />
-    <modal-editar v-model="showEditModal" :category="categoryToEdit" @confirm-edit="editCategory" />
+    <buttons-categories color="#4CAF50" text="Add Category" @click="openModal" />
+    <modal-create v-model="showModal" @save-category="handleSaveCategory" />
+    <modal-delete v-model="showDeleteModal" :category-id="categoryIdToDelete" @confirm-delete="deleteCategory" />
+    <modal-edit v-model="showEditModal" :category="categoryToEdit" @confirm-edit="editCategory" />
     <card-categories :categories="categories" @open-edit-modal="openEditModal"
       @open-confirmation-modal="openConfirmationModal" @delete-category="deleteCategory" />
   </v-container>
@@ -12,11 +12,11 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import Navbar from "../components/navigation-bar.vue";
+import Navbar from "../components/navigationBar.vue";
 import ButtonsCategories from '../components/buttonsCategories.vue';
-import ModalCriar from '../components/modalCriar.vue';
-import ModalExcluir from '../components/modalExcluir.vue';
-import ModalEditar from '../components/modalEditar.vue';
+import ModalCreate from '../components/modalCreate.vue';
+import ModalDelete from '../components/modalDelete.vue';
+import ModalEdit from '../components/modalEdit.vue';
 import CardCategories from '../components/cardCategories.vue';
 import { api } from '../services/api';
 
@@ -28,9 +28,9 @@ interface Category {
 export default defineComponent({
   components: {
     ButtonsCategories,
-    ModalCriar,
-    ModalExcluir,
-    ModalEditar,
+    ModalCreate,
+    ModalDelete,
+    ModalEdit,
     Navbar,
     CardCategories,
   },
@@ -66,7 +66,7 @@ export default defineComponent({
         this.categories = this.categories.filter((category: Category) => category._id !== categoryId);
         this.showDeleteModal = false;
       } catch (error) {
-        console.error('Erro ao excluir categoria:', error);
+        console.error('Error when deleting category:', error);
       }
     },
     async handleSaveCategory(categoryName: string) {
@@ -81,7 +81,7 @@ export default defineComponent({
         this.categories.push(newCategory);
         this.showModal = false;
       } catch (error) {
-        console.error('Erro ao criar categoria:', error);
+        console.error('Error creating category:', error);
       }
     },
     async editCategory(editedCategory: Category) {
@@ -97,7 +97,7 @@ export default defineComponent({
         }
         this.showEditModal = false;
       } catch (error) {
-        console.error('Erro ao editar categoria:', error);
+        console.error('Erro when editing category:', error);
       }
     },
     async fetchCategories() {
@@ -106,7 +106,7 @@ export default defineComponent({
         const response = await api.get(`/categories/restaurant/${restaurantId}`);
         this.categories = response.data.data;
       } catch (error) {
-        console.error('Erro ao buscar categorias:', error);
+        console.error('Erro when searching category:', error);
       }
     },
     getToken() {

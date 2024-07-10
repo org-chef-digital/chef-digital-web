@@ -9,7 +9,7 @@
           <v-text-field
             v-model="email"
             bg-color="white"
-            hint="Insira seu email acesso"
+            hint="Enter your email"
             label="Email"
             placeholder="john123@example.com"
             type="email"
@@ -20,8 +20,8 @@
           <v-text-field
             v-model="password"
             bg-color="white"
-            hint="Insira sua senha para acessar"
-            label="Senha"
+            hint="Enter your password"
+            label="Password"
             :type="visibility"
             :append-icon="visibility === 'password' ? 'mdi-eye' : 'mdi-eye-off'"
             :rules="[rules.required]"
@@ -29,11 +29,11 @@
             variant="outlined"
             ></v-text-field>
             
-          <v-btn class="btn-entrar" color="green" width="344" @click="login">Entrar</v-btn>
+          <v-btn class="btn-entrar" color="green" width="344" @click="login">Login</v-btn>
 
-          <p class="tnpc text-lg-center">Não possui cadastro?</p>
+          <p class="tnpc text-lg-center">Don't have a registration?</p>
 
-          <v-btn class="btn-cadst" color="blue" width="150" @click="this.$router.push({ name: 'register' })">Cadastre-se</v-btn>
+          <v-btn class="btn-cadst" color="blue" width="150" @click="this.$router.push({ name: 'register' })">Register</v-btn>
         </v-form>
       </v-navigation-drawer>
     </v-container>
@@ -58,7 +58,7 @@ export default defineComponent({
     return {
       visibility: 'password',
       rules: {
-        required: (value: string) => !!value || 'Campo obrigatório.',
+        required: (value: string) => !!value || 'Required.',
       },
       email: '',
       password: '',
@@ -78,10 +78,10 @@ export default defineComponent({
           localStorage.setItem('id', id);
           this.$router.push({ name: 'home' });
         } else {
-          console.error('Token JWT não encontrado na resposta.');
+          console.error('Token JWT undefined.');
         }
       } catch (error) {
-        console.error('Erro durante o login:', error);
+        console.error('Error login:', error);
       }
     },
     switchVisibility(): void {
