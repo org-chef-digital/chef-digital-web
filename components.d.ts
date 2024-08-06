@@ -7,17 +7,17 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AdminMenuButton: typeof import('./src/components/adminMenuButton.vue')['default']
     ButtonsCategories: typeof import('./src/components/buttonsCategories.vue')['default']
     CardCategories: typeof import('./src/components/cardCategories.vue')['default']
     CategoriesList: typeof import('./src/components/categoriesList.vue')['default']
-    FinishBuy: typeof import('./src/components/finishBuy.vue')['default']
     FormsRegister: typeof import('./src/components/formsRegister.vue')['default']
+    Header: typeof import('./src/components/header.vue')['default']
+    HeaderComp: typeof import('./src/components/headerComp.vue')['default']
     ModalCreate: typeof import('./src/components/modalCreate.vue')['default']
     ModalDelete: typeof import('./src/components/modalDelete.vue')['default']
     ModalEdit: typeof import('./src/components/modalEdit.vue')['default']
     NavigationBar: typeof import('./src/components/navigationBar.vue')['default']
-    Productshowcase: typeof import('./src/components/productshowcase.vue')['default']
-    ProductShowcase: typeof import('./src/components/productShowcase.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

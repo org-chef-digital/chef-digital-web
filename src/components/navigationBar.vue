@@ -45,7 +45,7 @@ async function getStatus() {
         Authorization: `Bearer ${token}`
       }
     })
-    aberto.value = response.data.data;
+    open.value = response.data.data;
   } catch (error) {
     console.error('Error status:', error);
   }

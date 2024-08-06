@@ -1,11 +1,18 @@
 <template>
-  <v-dialog>
+  <v-dialog v-model="showModal" persistent max-width="600px">
     <v-card>
-      <v-card-title>Category name</v-card-title>
+      <v-card-title>Category Name</v-card-title>
       <v-card-text>
-        <v-text-field v-model="categoryName"></v-text-field>
-        <v-btn @click="saveCategory">Save</v-btn>
-        <v-btn @click="cancel">Cancel</v-btn>
+        <v-form v-model="isValid">
+          <v-text-field
+            v-model="formData.categoryName"
+            :rules="rules.categoryName"
+            label="Category Name"
+            required
+          ></v-text-field>
+          <v-btn @click="saveCategory" :disabled="!isValid">Save</v-btn>
+          <v-btn @click="cancel">Cancel</v-btn>
+        </v-form>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -14,22 +21,39 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+interface FormData {
+  categoryName: string;
+}
+
 export default defineComponent({
   emits: ['update:modelValue', 'save-category'],
   data() {
     return {
-      categoryName: '',
+      formData: {
+        categoryName: '',
+      } as FormData,
+      rules: {
+        categoryName: [
+          (v: string) => !!v || 'Required',
+          (v: string) => !/^\d+$/.test(v) || 'Name cannot be a number',
+        ],
+      },
+      isValid: false,
+      showModal: false,
     };
   },
   methods: {
     saveCategory() {
-      this.$emit('save-category', this.categoryName);
-      this.categoryName = ''; 
-      this.$emit('update:modelValue', false);
+      if (this.isValid) {
+        this.$emit('save-category', this.formData.categoryName);
+        this.formData.categoryName = '';
+        this.showModal = false;
+      }
     },
     cancel() {
-      this.$emit('update:modelValue', false);
-    },
-  },
+      this.formData.categoryName = '';
+      this.showModal = false;
+    }
+  }
 });
 </script>

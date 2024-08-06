@@ -3,12 +3,28 @@
     <v-row>
       <v-col v-for="category in categories" :key="category._id">
         <v-card>
-          <v-card-title>{{ category.name }}</v-card-title>
-          <v-btn @click="openEditModal(category)">Edit</v-btn>
-          <v-btn @click="openConfirmationModal(category._id)">Delete</v-btn>
-        </v-card>
-        <v-card class="products">
-          <!--Products here-->
+          <v-card-title>
+            <v-row align="center" justify="space-between" class="w-100">
+              <v-col cols="auto">
+                {{ category.name }}
+              </v-col>
+              <v-col cols="auto">
+                <v-btn class="ml-6">
+                  <v-icon class="mr-4">mdi-plus-box-outline</v-icon>
+                  <span>Adicionar</span>
+                </v-btn>
+                <v-btn @click="openEditModal(category)"  class="ml-6">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn @click="openConfirmationModal(category._id)"  class="ml-6">
+                  <v-icon>mdi-trash-can-outline</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-title>
+          <v-card class="products">
+            <!--Products here-->
+          </v-card>
         </v-card>
       </v-col>
     </v-row>
@@ -17,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   props: {

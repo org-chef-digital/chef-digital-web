@@ -1,24 +1,26 @@
 <template>
-  <v-container>
-    <navbar />
-    <buttons-categories color="#4CAF50" text="Add Category" @click="openModal" />
-    <modal-create v-model="showModal" @save-category="handleSaveCategory" />
+  <div class="container">
+    <headerComp @create-category-2="openCreateModal" />
+
+    <modal-create v-model="showCreateModal" @save-category="saveCategory" />
     <modal-delete v-model="showDeleteModal" :category-id="categoryIdToDelete" @confirm-delete="deleteCategory" />
     <modal-edit v-model="showEditModal" :category="categoryToEdit" @confirm-edit="editCategory" />
+
     <card-categories :categories="categories" @open-edit-modal="openEditModal"
       @open-confirmation-modal="openConfirmationModal" @delete-category="deleteCategory" />
-  </v-container>
+  </div>
 </template>
 
+
+
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import Navbar from "../components/navigationBar.vue";
-import ButtonsCategories from '../components/buttonsCategories.vue';
-import ModalCreate from '../components/modalCreate.vue';
-import ModalDelete from '../components/modalDelete.vue';
-import ModalEdit from '../components/modalEdit.vue';
-import CardCategories from '../components/cardCategories.vue';
+import { defineComponent } from 'vue';
 import { api } from '../services/api';
+import headerComp from '../components/headerComp.vue';
+import modalDelete from '../components/modalDelete.vue'
+import modalCreate from '../components/modalCreate.vue';
+import modalEdit from '../components/modalEdit.vue';
+import cardCategories from '../components/cardCategories.vue';
 
 interface Category {
   _id: string;
@@ -27,16 +29,15 @@ interface Category {
 
 export default defineComponent({
   components: {
-    ButtonsCategories,
-    ModalCreate,
-    ModalDelete,
-    ModalEdit,
-    Navbar,
-    CardCategories,
+    headerComp,
+    modalDelete,
+    modalCreate,
+    modalEdit,
+    cardCategories, 
   },
   data() {
     return {
-      showModal: false,
+      showCreateModal: false,
       showDeleteModal: false,
       showEditModal: false,
       categoryToEdit: { _id: '', name: '' } as Category,
@@ -45,8 +46,8 @@ export default defineComponent({
     };
   },
   methods: {
-    openModal() {
-      this.showModal = true;
+    openCreateModal() {
+      this.showCreateModal = true;
     },
     openEditModal(category: { _id: string; name: string }) {
       this.categoryToEdit = category;
@@ -69,7 +70,7 @@ export default defineComponent({
         console.error('Error when deleting category:', error);
       }
     },
-    async handleSaveCategory(categoryName: string) {
+    async saveCategory(categoryName: string) {
       try {
         const restaurantId = localStorage.getItem("id");
         const response = await api.post('/categories', { name: categoryName, restaurantId }, {
@@ -79,7 +80,7 @@ export default defineComponent({
         });
         const newCategory = response.data.data;
         this.categories.push(newCategory);
-        this.showModal = false;
+        this.showCreateModal = false;
       } catch (error) {
         console.error('Error creating category:', error);
       }
