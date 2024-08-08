@@ -1,6 +1,6 @@
 <template v-slot:append>
   <div class="barraNav"> 
-    <img src="../../public/logo.png" alt="logo" class="logomarca">
+    <img src="../lib/logo.png" alt="logo" class="logomarca">
     <adminMenuButton @create-category-1="handleCreateCategory"/>
   </div>
 </template>

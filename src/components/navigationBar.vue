@@ -1,139 +1,134 @@
 <template>
-  <v-navigation-drawer color="#FF9943" width="260" location="left" permanent>
-    <div class="nav">
-      <v-btn id="OorC" class="middlebtn" :class="{ 'Open': open, 'Close': !open }" @click="toggleStatus">
-        {{ open ? 'Open' : 'Close' }}
-      </v-btn>
-      <v-btn id="btn-gest" class="middlebtn" @click="this.$router.push({ name: 'home' })">
-        Manager
-      </v-btn>
-      <v-btn id="btn-gest" class="middlebtn" @click="this.$router.push({ name: 'analysis' })">
-        Analysis
-      </v-btn>
-      <v-btn id="link-btn" class="middlebtn" @click="copyClientPageLink">
-        Copy Client Link
-      </v-btn>
-      <v-btn id="log" @click="logout">
-        Logout
-      </v-btn>
-    </div>
-  </v-navigation-drawer>
+  <div class="container">
+    <v-menu :close-on-content-click="false">
+      <template v-slot:activator="{ props }">
+        <v-app-bar-nav-icon v-bind="props"></v-app-bar-nav-icon>
+      </template>
+      <v-card>
+        <v-list>
+          <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.jpg" title="CR_RFEICOES"></v-list-item>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list>
+          <v-list-item>
+            <v-menu :close-on-content-click="false">
+              <template v-slot:activator="{ props }">
+                <v-btn block class="menu-buttons" v-bind="props">
+                  <v-icon class="mr-4">mdi-chevron-down</v-icon>
+                  <span>Status</span>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item>
+                  <v-switch hide-details v-model="status" @change="updateStatus"></v-switch>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-list-item>
+          <v-list-item>
+            <v-btn block class="menu-buttons" @click="createCategory">
+              <v-icon class="mr-4">mdi-card-plus-outline</v-icon>
+              <span>Criar Categoria</span>
+            </v-btn>
+          </v-list-item>
+          <v-list-item>
+            <v-btn block class="menu-buttons">
+              <v-icon class="mr-4">mdi-cog-outline</v-icon>
+              <span>Configurações</span>
+            </v-btn>
+          </v-list-item>
+          <v-list-item>
+            <v-btn block class="menu-buttons" @click="logout">
+              <v-icon class="mr-4">mdi-logout</v-icon>
+              <span>Sair</span>
+            </v-btn>
+          </v-list-item>
+          <v-list-item>
+            <v-btn block class="menu-buttons" @click="copyClientPageLink">
+              <v-icon class="mr-4" color="primary">mdi-link</v-icon>
+              <span class="link-button">Copiar link</span>
+            </v-btn>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-menu>
+  </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { api } from '../services/api';
+<script>
+import { restaurantServices } from '../services/restaurantServices';
 
-const open = ref(false);
-const router = useRouter();
-
-async function toggleStatus() {
-  open.value = !open.value;
-  await updateStatus(open.value);
-}
-
-async function getStatus() {
-  const token = localStorage.getItem('token');
-  if (!token) return;
-  const id = localStorage.getItem('id');
-  if (!id) return;
-
-  try {
-    const response = await api.get(`/restaurant/${id}/status`, {
-      headers: {
-        Authorization: `Bearer ${token}`
+export default {
+  name: 'adminMenuButton',
+  data() {
+    return {
+      status: false
+    };
+  },
+  mounted() {
+    this.fetchStatus();
+  },
+  methods: {
+    async fetchStatus() {
+      const id = localStorage.getItem('id');
+      if (id) {
+        try {
+          const response = await restaurantServices.getStatus({ id });
+          this.status = response.data.status;
+        } catch (error) {
+          console.error('Failed to fetch status:', error);
+        }
       }
-    })
-    open.value = response.data.data;
-  } catch (error) {
-    console.error('Error status:', error);
-  }
-}
-
-async function updateStatus(status) {
-  const token = localStorage.getItem('token');
-  if (!token) return;
-  const id = localStorage.getItem('id');
-  if (!id) return;
-
-  try {
-    const response = await api.put(`/restaurant/${id}/updateStatus`, {
-      status
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
+    },
+    async updateStatus() {
+      const id = localStorage.getItem('id');
+      if (id) {
+        try {
+          await restaurantServices.updateStatus({ id, status: this.status });
+          console.log('Status updated successfully');
+        } catch (error) {
+          console.error('Failed to update status:', error);
+        }
       }
-    })
-
-    console.log('Status atualizado:', response.data.data);
-  } catch (error) {
-    console.error('Error when updating status:', error);
+    },
+    createCategory() {
+      this.$emit('create-category-1');
+    },
+    copyClientPageLink() {
+      const id = localStorage.getItem('id');
+      if (id) {
+        const clientPageLink = `${window.location.origin}/client/${id}`;
+        navigator.clipboard.writeText(clientPageLink);
+        console.log('Link copied:', clientPageLink);
+      } else {
+        console.error('Restaurant ID not found.');
+      }
+    },
+    logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('id');
+      this.$router.push({ name: 'login' });
+    }
   }
-}
-
-function logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('id');
-  router.push({ name: 'login' });
-}
-
-function copyClientPageLink() {
-  const id = localStorage.getItem('id');
-  if (id) {
-    const clientPageLink = `${window.location.origin}/client/${id}`; // Link da página do cliente
-    navigator.clipboard.writeText(clientPageLink); // Copia o link para a área de transferência
-    console.log('Link copied:', clientPageLink);
-  } else {
-    console.error('Restaurant ID not found.');
-  }
-}
-
-onMounted(() => {
-  if (!localStorage.getItem('token')) {
-    router.push({ name: 'login' });
-  } else {
-    getStatus();
-  }
-});
+};
 </script>
 
 <style scoped>
-.Open {
-  background-color: green;
-  color: white;
+.container {
+  width: 300px;
 }
 
-.Close {
-  background-color: red;
-  color: white;
-}
-
-.nav {
+.menu-buttons {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
 }
 
-#OorC {
-  margin-top: 60px;
-  margin-bottom: 70px;
-}
-
-#btn-gest {
-  margin-bottom: 40px;
-}
-
-#log {
-  position: absolute;
-  bottom: 20px;
-}
-
-#link-btn{
-  background-color: rgb(178, 248, 248);
-}
-
-.middlebtn {
-  width: 153px;
+.link-button {
+  color: #1976D2;
+  border-bottom: 1px solid;
+  padding-bottom: 2px;
 }
 </style>

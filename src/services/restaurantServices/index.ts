@@ -69,5 +69,6 @@ async function updateStatus(restaurantStatus: RestaurantStatus) {
 export const restaurantServices = {
     create,
     signIn, 
-    getStatus
+    getStatus,
+    updateStatus
 }
