@@ -1,5 +1,5 @@
 <template>
-  <v-dialog>
+  <v-dialog persistent max-width="600px">
     <v-card>
       <v-card-title>Delete category</v-card-title>
       <v-card-text>

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showModal">
+  <v-dialog v-model="showModal" persistent max-width="600px">
     <v-card>
       <v-card-title>Edit category</v-card-title>
       <v-card-text>

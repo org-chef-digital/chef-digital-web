@@ -51,6 +51,7 @@ export default defineComponent({
       }
     },
     cancel() {
+      this.$emit('update:modelValue', false);
       this.formData.categoryName = '';
       this.showModal = false;
     }
