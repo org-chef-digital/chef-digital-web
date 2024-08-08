@@ -1,7 +1,7 @@
 <template>
   <v-responsive aspect-ratio="9/16">
     <v-container>
-      <v-app-bar color="#FF9943">
+      <v-app-bar color="#DE6A16">
         <v-img src="../assets/client-logo.png" width="100px" height="50px"></v-img>
       </v-app-bar>
       <template v-if="restaurantOpen">
@@ -43,6 +43,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import List from '../components/categoriesList.vue';
+
 import { api } from '../services/api';
 
 const showFinishBuyModal = ref(false);

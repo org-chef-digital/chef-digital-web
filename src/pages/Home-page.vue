@@ -7,7 +7,7 @@
     <modal-edit v-model="showEditModal" :category="categoryToEdit" @confirm-edit="editCategory" />
     <modal-create-product v-model="showCreateProductModal" @save-product="saveProduct"/>
 
-    <card-categories :categories="categories" @open-edit-modal="openEditModal"
+    <card-categories :categories="categories" :products="products" @open-edit-modal="openEditModal"
       @open-confirmation-modal="openConfirmationModal" @delete-category="deleteCategory" @open-create-product-modal="openCreateProductModal"
       />
   </div>
