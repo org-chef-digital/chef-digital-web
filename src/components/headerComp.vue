@@ -1,9 +1,8 @@
-<template>
-  <v-app-bar color="#FF9944"> 
-    <template v-slot:append>
-      <adminMenuButton @create-category-1="handleCreateCategory"/>
-    </template>
-  </v-app-bar>
+<template v-slot:append>
+  <div class="barraNav"> 
+    <img src="../../public/logo.png" alt="logo" class="logomarca">
+    <adminMenuButton @create-category-1="handleCreateCategory"/>
+  </div>
 </template>
 
 <script>
@@ -26,6 +25,16 @@ export default {
 </script>
 
 <style scoped>
+.barraNav {
+  background-color: #DE6A16;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 16px;
+}
+
 .loginContainer {
   display: flex;
   align-items: center;
@@ -33,8 +42,9 @@ export default {
 }
 
 .logomarca {
-  max-width: 200px;
-  max-height: 200px;
+  max-width: 350px;
+  max-height: 350px;
   cursor: pointer;
+  gap: 100px;
 }
 </style>

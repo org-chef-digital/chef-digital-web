@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div>
       <v-menu :close-on-content-click="false" >
         <template v-slot:activator="{ props }" >
           <v-app-bar-nav-icon v-bind="props"></v-app-bar-nav-icon>
@@ -90,10 +90,7 @@
   </script>
   
   <style scoped>
-  .container {
-    width: 300px;
-  }
-  
+
   .menu-buttons {
     display: flex;
     align-items: center;
