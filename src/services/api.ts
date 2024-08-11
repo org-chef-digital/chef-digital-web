@@ -8,5 +8,5 @@ export const api = axios.create({
 export function responseError(error: any)  {
     const respError = error as AxiosError<ApiResponse<null>>;
     
-    return respError.response.data;
+    return respError.response?.data
 };

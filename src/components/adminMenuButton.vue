@@ -75,10 +75,12 @@ export default {
       const id = localStorage.getItem('id');
       if (id) {
         try {
-          const response = await restaurantServices.getStatus({ id });
-          this.status = response.data.status;
+          const response = await restaurantServices.getStatus({id});
+          this.status = response.data.status; 
+
+          return response;
         } catch (error) {
-          console.error('Failed to fetch status:', error);
+          console.log('Failed to fetch status:', error);
         }
       }
     },
