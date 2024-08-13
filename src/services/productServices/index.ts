@@ -1,5 +1,6 @@
 import { api, responseError } from "../api";
 import { ApiResponse } from "../apiTypes";
+import { Category } from "../categoryServices/categoryTypes";
 import { Product } from "./productTypes";
 
 async function update(newProduct: Product) {
@@ -33,7 +34,7 @@ async function create(newProduct: Product) {
 
 async function getProducts() {
     try {
-        const response = await api.get<ApiResponse<Product>>(`/products/all/restaurant/${localStorage.getItem('restaurant_id')}`);
+        const response = await api.get<ApiResponse<Product>>(`products/all/restaurant/${localStorage.getItem('restaurantId')}`);
 
         if (!response.data.success) {
             throw new Error(response.data.message);
