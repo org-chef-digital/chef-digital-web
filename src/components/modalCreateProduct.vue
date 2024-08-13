@@ -27,6 +27,9 @@ interface FormData {
 }
 
 export default defineComponent({
+    props: {
+        categoryId: String,
+    },
     emits: ['update:modelValue', 'save-category'],
     data() {
         return {
@@ -52,7 +55,7 @@ export default defineComponent({
     methods: {
         saveProduct() {
             if (this.isValid) {
-                this.$emit('save-product', this.formData.productName, this.formData.productPrice, this.formData.availability);
+                this.$emit('save-product', this.formData.productName, this.formData.productPrice, this.formData.availability, this.categoryId);
                 this.formData.categoryName = '';
                 this.formData.productPrice = 0;
                 this.$emit('update:modelValue', false);

@@ -3,12 +3,14 @@
     <headerComp @create-category-2="openCreateModal" />
 
     <modal-create v-model="showCreateModal" @save-category="saveCategory" />
-    <modal-delete v-model="showDeleteModal" :category-id="categoryIdToDelete" @confirm-delete="deleteCategory" />
-    <modal-edit v-model="showEditModal" :category="categoryToEdit" @confirm-edit="editCategory" />
-    <modal-create-product v-model="showCreateProductModal" @save-product="saveProduct"/>
 
-    <card-categories :categories="categories" :products="products" @open-edit-modal="openEditModal"
-      @open-confirmation-modal="openConfirmationModal" @delete-category="deleteCategory" @open-create-product-modal="openCreateProductModal"
+    <card-categories :categories="categories" :products="products" 
+       @edit-category="editCategory"
+       @delete-category="deleteCategory" 
+       @save-product="saveProduct"
+       @passing-id="fetchProducts"
+       @delete-product="deleteProduct"
+       @edit-product="editProduct"  
       />
   </div>
 </template>
@@ -19,11 +21,9 @@
 import { defineComponent } from 'vue';
 import { api } from '../services/api';
 import headerComp from '../components/headerComp.vue';
-import modalDelete from '../components/modalDelete.vue';
 import modalCreate from '../components/modalCreate.vue';
 import modalEdit from '../components/modalEdit.vue';
 import cardCategories from '../components/cardCategories.vue';
-import modalCreateProduct from '../components/modalCreateProduct.vue';
 
 interface Category {
   _id: string;
@@ -42,20 +42,15 @@ interface Product {
 export default defineComponent({
   components: {
     headerComp,
-    modalDelete,
     modalCreate,
     modalEdit,
     cardCategories, 
-    modalCreateProduct,
   },
   data() {
     return {
-      showCreateProductModal: false,
       showCreateModal: false,
-      showDeleteModal: false,
       showEditModal: false,
       categoryToEdit: { _id: '', name: '' } as Category,
-      categoryIdToDelete: '',
       categories: [] as Category[],
       products: [] as Product[],
     };
@@ -64,17 +59,7 @@ export default defineComponent({
     openCreateModal() {
       this.showCreateModal = true;
     },
-    openEditModal(category: { _id: string; name: string }) {
-      this.categoryToEdit = category;
-      this.showEditModal = true;
-    },
-    openConfirmationModal(categoryId: string) {
-      this.categoryIdToDelete = categoryId;
-      this.showDeleteModal = true;
-    },
-    openCreateProductModal() {
-      this.showCreateProductModal = true;
-    },
+
     async deleteCategory(categoryId: string) {
       try {
         const response = await api.delete(`/categories/${categoryId}`, {
@@ -83,11 +68,23 @@ export default defineComponent({
           },
         });
         this.categories = this.categories.filter((category: Category) => category._id !== categoryId);
-        this.showDeleteModal = false;
       } catch (error) {
         console.error('Error when deleting category:', error);
       }
     },
+    async deleteProduct(productId: string) {
+      try {
+        const response = await api.delete(`/products/${productId}`, {
+          headers: {
+            Authorization: `Bearer ${this.getToken()}`,
+          },
+        });
+        this.products = this.products.filter((product: Product) => product._id !== productId);
+      } catch (error) {
+        console.error('Error when deleting product:', error);
+      }
+    },
+
     async saveCategory(categoryName: string) {
       try {
         const restaurantId = localStorage.getItem("id");
@@ -113,7 +110,6 @@ export default defineComponent({
           },
         });
         const newProduct = response.data.data;
-        console.log(response.data.data);
         this.products.push(newProduct);
         this.showCreateProductModal = false;
       } catch (error) {
@@ -136,6 +132,25 @@ export default defineComponent({
         console.error('Erro when editing category:', error);
       }
     },
+    async editProduct(editedProduct: Product) {
+      try {
+        const response = await api.put(`/products/${editedProduct._id}`, { title: editedProduct.title, price: editedProduct.price, availability: editedProduct.availability }, {
+          headers: {
+            Authorization: `Bearer ${this.getToken()}`,
+          },
+        });
+        const index = this.products.findIndex((product: Product) => product._id === editedProduct._id);
+        if (index !== -1) {
+          this.products[index].title = editedProduct.title;
+          this.products[index].price = editedProduct.price;
+          this.products[index].availability = editedProduct.availability;
+        }
+        this.showEditProductModal = false;
+      } catch (error) {
+        console.error('Erro when editing product:', error);
+      }
+    },
+
     async fetchCategories() {
       try {
         const restaurantId = localStorage.getItem("id");
