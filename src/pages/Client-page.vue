@@ -1,9 +1,11 @@
 <template>
   <v-responsive aspect-ratio="9/16">
+    <div class="barraNav">
+      <img src="../lib/logo.png" alt="logo" class="logomarca">
+
+      <CartButton />
+    </div>
     <v-container>
-      <v-app-bar color="#DE6A16">
-        <v-img src="../assets/client-logo.png" width="100px" height="50px"></v-img>
-      </v-app-bar>
       <template v-if="restaurantOpen">
         <h2>Menu do dia</h2>
         <List :categories="categories" />
@@ -45,6 +47,7 @@ import { useRoute, useRouter } from 'vue-router';
 import List from '../components/categoriesList.vue';
 
 import { api } from '../services/api';
+import CartButton from '@/components/cartButton.vue';
 
 const showFinishBuyModal = ref(false);
 const valid = ref(true);
@@ -134,5 +137,15 @@ onMounted(async () => {
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
+}
+
+.barraNav {
+  background-color: #DE6A16;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 16px;
 }
 </style>

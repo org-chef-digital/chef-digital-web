@@ -75,8 +75,8 @@ export default {
       const id = localStorage.getItem('id');
       if (id) {
         try {
-          const response = await restaurantServices.getStatus({id});
-          this.status = response.data.status; 
+          const response = await restaurantServices.getStatus({ id });
+          this.status = response.data.status;
 
           return response;
         } catch (error) {

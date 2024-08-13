@@ -11,6 +11,7 @@ declare module 'vue' {
     ButtonsCategories: typeof import('./src/components/buttonsCategories.vue')['default']
     CardCategories: typeof import('./src/components/cardCategories.vue')['default']
     CardProduct: typeof import('./src/components/cardProduct.vue')['default']
+    CartButton: typeof import('./src/components/cartButton.vue')['default']
     CategoriesList: typeof import('./src/components/categoriesList.vue')['default']
     FormsRegister: typeof import('./src/components/formsRegister.vue')['default']
     HeaderComp: typeof import('./src/components/headerComp.vue')['default']
