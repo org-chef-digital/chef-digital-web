@@ -7,7 +7,7 @@
     <v-container>
       <template v-if="restaurantOpen">
         <h2>Menu do dia</h2>
-        <List :categories="categories" />
+        <List :categories="categories"  />
       </template>
       <template v-else>
         <p>O restaurante está fechado no momento. Por favor, volte mais tarde.</p>
@@ -23,10 +23,12 @@ import { useRoute } from 'vue-router';
 import List from '../components/categoriesList.vue';
 
 import { Category } from '@/services/categoryServices/categoryTypes';
+
 import { api } from '../services/api';
 import CartButton from '@/components/cartButton.vue';
 
 const categories = ref<Category[]>([]);
+
 const restaurantOpen = ref<boolean>(true);
 const route = useRoute();
 

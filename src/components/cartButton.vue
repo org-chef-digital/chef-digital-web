@@ -6,16 +6,34 @@
         <v-card title="Carinho" prepend-icon="mdi-cart-outline">
             <v-card-text>
                 <v-form ref="form" v-model="valid">
-                    <v-radio-group v-model="tipoEnvio" row>
-                        <v-radio label="Retirar no Restaurante" value="retirar"></v-radio>
-                        <v-radio label="Entrega" value="entrega"></v-radio>
-                    </v-radio-group>
-                    <v-radio-group v-model="tipoPagamento" row>
-                        <v-radio label="Pix" value="pix"></v-radio>
-                        <v-radio label="Cartão" value="cartao"></v-radio>
-                        <v-radio label="Dinheiro" value="dinheiro"></v-radio>
-                        <List :products="products" />
-                    </v-radio-group>
+                    <v-list>
+                        <v-list-item v-for="product in products" :key="product._id">
+                            <v-list-item-content>
+                                <v-row>
+                                    <v-col>
+                                        <v-list-item-title>{{ product.title }}</v-list-item-title>
+                                        <v-list-item-subtitle>R$ {{ product.price.toFixed(2) }}</v-list-item-subtitle>
+                                    </v-col>
+                                    <v-col cols="auto">
+                                        <v-btn icon="mdi-delete" @click="removeProduct(product._id)" variant="plain"
+                                            color="red darken-1" density="compact"></v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list>
+                    <v-form ref="form" v-model="valid">
+                        <v-radio-group v-model="tipoEnvio" row>
+                            <v-radio label="Retirar no Restaurante" value="retirar"></v-radio>
+                            <v-radio label="Entrega" value="entrega"></v-radio>
+                        </v-radio-group>
+                        <v-radio-group v-model="tipoPagamento" row>
+                            <v-radio label="Pix" value="pix"></v-radio>
+                            <v-radio label="Cartão" value="cartao"></v-radio>
+                            <v-radio label="Dinheiro" value="dinheiro"></v-radio>
+                            <List :products="products" />
+                        </v-radio-group>
+                    </v-form>
                 </v-form>
             </v-card-text>
             <v-card-actions class="buttonsPurchase">
@@ -30,8 +48,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { Category } from '@/services/categoryServices/categoryTypes';
 import { api } from '../services/api';
+
+import { Product } from '@/services/productServices/productTypes';
+const products = ref<Product[]>([]);
+
+import { Category } from '@/services/categoryServices/categoryTypes';
+const categories = ref<Category[]>([]);
 
 
 const showFinishBuyModal = ref(false);
@@ -39,7 +62,6 @@ const valid = ref(true);
 const tipoEnvio = ref<string | null>(null);
 const tipoPagamento = ref<string | null>(null);
 
-const categories = ref<Category[]>([]);
 
 const restaurantOpen = ref<boolean>(true);
 const route = useRoute();
@@ -47,6 +69,7 @@ const telefoneRestaurante = ref<string | null>(null);
 
 const openDialog = () => {
     showFinishBuyModal.value = true;
+    console.log(products);
 };
 
 async function fetchCategories() {
@@ -58,6 +81,27 @@ async function fetchCategories() {
         console.error('Erro ao buscar categorias:', error);
     }
 };
+
+async function fetchProducts() {
+    try {
+        const restaurantId = route.params.id;
+        const response = await api.get(`/products/all/restaurant/${restaurantId}`);
+        products.value = response.data.data;
+        console.log("penis");
+    } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+    }
+}
+
+function removeProduct(productId: string) {
+    const productIndex = products.value.findIndex(product => product.id === productId);
+
+    if (productIndex !== 1) {
+        products.value.splice(productIndex, 1);
+    } else {
+        console.error('Produto não encontrado no carrinho.');
+    }
+}
 
 async function checkRestaurantStatus() {
     try {
@@ -93,19 +137,27 @@ const finalizarPedido = () => {
         return;
     }
 
-    let mensagem = `Gostaria de fazer um pedido. Tipo de entrega: ${tipoEnvioTexto}. Forma de pagamento: ${pagamentoTexto}.`;
+    // Construir a lista de produtos
+    const produtosTexto = products.value.map(product => {
+        return `${product.title} - R$ ${product.price.toFixed(2)}`;
+    }).join(', ');
+
+    let mensagem = `Gostaria de fazer um pedido. Produtos: ${produtosTexto}. Tipo de entrega: ${tipoEnvioTexto}. Forma de pagamento: ${pagamentoTexto}.`;
+    
     if (tipoEnvio.value === 'entrega') {
-        mensagem += `Desejo que seja realizada a entrega do pedido.`;
+        mensagem += ` Desejo que seja realizada a entrega do pedido.`;
     }
 
     const urlWhatsapp = `https://wa.me/+55${telefoneRestaurante.value}?text=${encodeURIComponent(mensagem)}`;
     window.location.href = urlWhatsapp;
 };
 
+
 onMounted(async () => {
     await fetchCategories();
     await checkRestaurantStatus();
     await fetchRestaurantPhone();
+    await fetchProducts()
 
     if (!restaurantOpen.value) {
         categories.value = [];
