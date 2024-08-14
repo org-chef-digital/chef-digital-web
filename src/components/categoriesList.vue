@@ -5,7 +5,7 @@
           <v-card>
             <v-card-title>{{ category.name }}</v-card-title>
           </v-card>
-          <v-card class="products">
+          <v-card class="categories">
           </v-card>
         </v-col>
       </v-row>
@@ -21,7 +21,7 @@
   </script>
   
   <style scoped>
-  .products {
+  .categories {
     width: 800px;
     background-color: cornflowerblue;
     border: 1px solid black;
