@@ -68,10 +68,8 @@ async function checkRestaurantStatus() {
     const restaurantId = route.params.id;
     const response = await api.get(`/restaurant/${restaurantId}/status`);
     restaurantOpen.value = response.data.data;
-    console.log("que tela miserável kkkkkkkkkkkkkk me coringou");
   } catch (error) {
     console.error('Erro ao verificar o status do restaurante:', error);
-    console.log("morri ahshau")
   }
 }
 

@@ -87,7 +87,6 @@ async function fetchProducts() {
         const restaurantId = route.params.id;
         const response = await api.get(`/products/all/restaurant/${restaurantId}`);
         products.value = response.data.data;
-        console.log("penis");
     } catch (error) {
         console.error('Erro ao buscar produtos:', error);
     }
