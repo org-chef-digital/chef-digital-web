@@ -56,7 +56,7 @@ async function fetchCategories() {
 async function fetchProducts() {
   try {
     const restaurantId = route.params.id;
-    const response = await api.get(`/products/all/restaurant/${restaurantId}`);
+    const response = await api.get(`/products/all`);
     products.value = response.data.data;
   } catch (error) {
     console.error('Erro ao buscar produtos:', error);

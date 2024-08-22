@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col v-for="category in categories" :key="category.id" cols="12">
+      <v-col v-for="category in categories" :key="category._id" cols="12">
         <v-card>
           <v-card-title>
             <v-row align="center" justify="space-between" class="w-100">
@@ -12,7 +12,7 @@
           </v-card-title>
           <v-card-text>
             <v-row>
-              <v-col v-for="product in filteredProducts(category.id)" :key="product._id" cols="12">
+              <v-col v-for="product in filteredProducts(category._id)" :key="product._id" cols="12">
                 <v-card>
                   <v-card-title>
                     <v-row align="center" justify="space-between" class="w-100">
@@ -27,11 +27,6 @@
                     </v-row>
                   </v-card-title>
                   <v-card-text>
-                    <v-row>
-                      <v-col cols="12">
-                        <span>Preço: R$ {{ product.price.toFixed(2) }}</span>
-                      </v-col>
-                    </v-row>
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -47,7 +42,7 @@
 import { defineProps, ref, computed } from 'vue';
 
 const props = defineProps<{
-  categories: { id: string; name: string }[];
+  categories: { _id: string; name: string }[];
   products: { _id: string; title: string; price: number; category_id: string }[];
   selectedSize: string;
 }>();
@@ -83,7 +78,7 @@ function isMaxQuantityReached() {
 }
 
 function filteredProducts(categoryId: string) {
-  return props.products.filter(product => product.category_id === categoryId);
+  return props.products.filter(product => product.category === categoryId);
 }
 </script>
 
