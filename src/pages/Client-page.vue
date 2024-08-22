@@ -10,10 +10,11 @@
         
         <v-list>
           <h2>Selecione o tipo de marmita:</h2>
+          
           <br>
-          <v-btn @click="selectedSize = 'P'">P</v-btn>
-          <v-btn @click="selectedSize = 'M'">M</v-btn>
-          <v-btn @click="selectedSize = 'G'">G</v-btn>
+          <v-btn @click="selectSize('P')"><strong>P</strong> | R${{ prices.P | currency }}</v-btn>
+          <v-btn @click="selectSize('M')"><strong>M</strong> | R${{ prices.M | currency }}</v-btn>
+          <v-btn @click="selectSize('G')"><strong>G</strong> | R${{ prices.G | currency }}</v-btn>
           <List :categories="categories" :products="products" :selectedSize="selectedSize" />
           <br>
         </v-list>
@@ -38,10 +39,23 @@ import CartButton from '@/components/cartButton.vue';
 
 const categories = ref<Category[]>([]);
 const products = ref<{ _id: string; title: string; price: number; category_id: string }[]>([]);
-const selectedSize = ref<string>('P');
 
 const restaurantOpen = ref<boolean>(true);
 const route = useRoute();
+
+const prices = {
+  P: 10.0, 
+  M: 15.0, 
+  G: 20.0, 
+};
+
+const selectedSize = ref<string>('P');
+const selectedPrice = ref<number>(prices[selectedSize.value]);
+
+function selectSize(size: 'P' | 'M' | 'G') {
+  selectedSize.value = size;
+  selectedPrice.value = prices[size];
+}
 
 async function fetchCategories() {
   try {
@@ -55,7 +69,6 @@ async function fetchCategories() {
 
 async function fetchProducts() {
   try {
-    const restaurantId = route.params.id;
     const response = await api.get(`/products/all`);
     products.value = response.data.data;
   } catch (error) {
