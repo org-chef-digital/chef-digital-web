@@ -31,9 +31,9 @@ async function create(newProduct: Product) {
     }
 }
 
-async function getProducts() {
+async function getProducts(category: Category) {
     try {
-        const response = await api.get<ApiResponse<Product>>(`products/all/restaurant/${localStorage.getItem('restaurantId')}`);
+        const response = await api.get<ApiResponse<Product>>(`products/all/${category.id}`);
 
         if (!response.data.success) {
             throw new Error(response.data.message);

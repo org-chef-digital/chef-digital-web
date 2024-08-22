@@ -24,7 +24,7 @@
           </v-card-title>
           <v-card-text>
             <v-row>
-              <v-col v-for="product in products" :key="product._id" cols="12">
+              <v-col v-for="product in filteredProducts(category._id)" :key="product._id" cols="12">
                 <v-card>
                   <v-card-title>
                     <v-row align="center" justify="space-between" class="w-100">
@@ -58,6 +58,7 @@
         </v-card>
       </v-col>
     </v-row>
+
     <modal-delete v-model="showDeleteModal" :category-id="categoryIdToDelete" @confirm-delete="deleteCategory" />
     <modal-edit v-model="showEditModal" :category="categoryToEdit" @confirm-edit="editCategory" />
 
@@ -75,14 +76,27 @@ import modalDeleteProduct from './modalDeleteProduct.vue';
 import modalEditProduct from './modalEditProduct.vue';
 import modalEdit from './modalEdit.vue';
 
+type Category = {
+  _id: string;
+  name: string;
+};
+
+type Product = {
+  _id: string;
+  title: string;
+  price: number;
+  availability: boolean;
+  category: string;
+};
+
 export default defineComponent({
   props: {
     categories: {
-      type: Array as PropType<{ _id: string; name: string }[]>,
+      type: Array as PropType<Category[]>,
       required: true,
     },
     products: {
-      type: Array as PropType<{ restaurant_id: string; availability: boolean; title: string; _id: string; price: number; category_id: string }[]>,
+      type: Array as PropType<Product[]>,
       required: true,
     },
   },
@@ -101,20 +115,23 @@ export default defineComponent({
       showDeleteProductModal: false,
       showEditProductModal: false,
       categoryIdToDelete: '',
-      categoryToEdit: { _id: '', name: '' },
+      categoryToEdit: {} as Category,
       categoryIdToProduct: '',
       productIdToDelete: '',
-      productToEdit: { restaurant_id: '', availability: false, title: '', _id: '', price: 0, category_id: '' },
+      productToEdit: {} as Product,
     };
   },
   methods: {
+    filteredProducts(categoryId: string) {
+    const filtered = this.products.filter(product => product.category === categoryId);
+    return filtered;
+  },
     openConfirmationModal(categoryId: string) {
       this.categoryIdToDelete = categoryId;
       this.showDeleteModal = true;
-      console.log(categoryId);
     },
-    deleteCategory(categoryId: string) {
-      this.$emit('delete-category', categoryId);
+    deleteCategory() {
+      this.$emit('delete-category', this.categoryIdToDelete);
       this.showDeleteModal = false;
     },
 
@@ -122,41 +139,37 @@ export default defineComponent({
       this.categoryIdToProduct = categoryId;
       this.showCreateProductModal = true;
     },
-    saveProduct(productName: string, productPrice: number, availability: boolean, categoryId: string) {
-      this.$emit('save-product', productName, productPrice, availability, categoryId);
-      this.$emit('passing-id', categoryId);
+    saveProduct(productTitle: string, productPrice:number, availability:boolean, categoryId:string) {
+      this.$emit('save-product', productTitle, productPrice, availability, categoryId);
       this.showCreateProductModal = false;
     },
 
     openDeleteProductModal(productId: string) {
       this.productIdToDelete = productId;
       this.showDeleteProductModal = true;
-      console.log(productId);
     },
-    deleteProduct(productId: string) {
-      this.$emit('delete-product', productId);
+    deleteProduct() {
+      this.$emit('delete-product', this.productIdToDelete);
       this.showDeleteProductModal = false;
     },
 
-    openEditModal(category: { _id: string; name: string }) {
+    openEditModal(category: Category) {
       this.categoryToEdit = category;
       this.showEditModal = true;
     },
-    editCategory(category: { _id: string; name: string }) {
+    editCategory(category: Category) {
       this.$emit('edit-category', category);
       this.showEditModal = false;
     },
 
-    openEditProductModal(product: { restaurant_id: string; availability: boolean; title: string; _id: string; price: number; category_id: string }) {
+    openEditProductModal(product: Product) {
       this.productToEdit = product;
       this.showEditProductModal = true;
     },
-    editProduct(product: { restaurant_id: string; availability: boolean; title: string; _id: string; price: number; category_id: string }) {
+    editProduct(product: Product) {
       this.$emit('edit-product', product);
       this.showEditProductModal = false;
     },
-
-
   },
 });
 </script>
