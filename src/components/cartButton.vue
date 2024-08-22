@@ -84,8 +84,7 @@ async function fetchCategories() {
 
 async function fetchProducts() {
     try {
-        const restaurantId = route.params.id;
-        const response = await api.get(`/products/all/restaurant/${restaurantId}`);
+        const response = await api.get(`/products/all`);
         products.value = response.data.data;
     } catch (error) {
         console.error('Erro ao buscar produtos:', error);
@@ -93,14 +92,15 @@ async function fetchProducts() {
 }
 
 function removeProduct(productId: string) {
-    const productIndex = products.value.findIndex(product => product.id === productId);
+    const productIndex = products.value.findIndex(product => product._id === productId);
 
-    if (productIndex !== 1) {
+    if (productIndex !== -1) {
         products.value.splice(productIndex, 1);
     } else {
         console.error('Produto não encontrado no carrinho.');
     }
 }
+
 
 async function checkRestaurantStatus() {
     try {
@@ -142,7 +142,7 @@ const finalizarPedido = () => {
     }).join(', ');
 
     let mensagem = `Gostaria de fazer um pedido. Produtos: ${produtosTexto}. Tipo de entrega: ${tipoEnvioTexto}. Forma de pagamento: ${pagamentoTexto}.`;
-    
+
     if (tipoEnvio.value === 'entrega') {
         mensagem += ` Desejo que seja realizada a entrega do pedido.`;
     }

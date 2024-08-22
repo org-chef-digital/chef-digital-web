@@ -7,10 +7,10 @@
     <v-container>
       <template v-if="restaurantOpen">
         <h2>Menu do dia {{ new Date().toLocaleDateString() }} | {{ new Date().toLocaleTimeString() }}</h2>
-        
+
         <v-list>
           <h2>Selecione o tipo de marmita:</h2>
-          
+
           <br>
           <v-btn @click="selectSize('P')"><strong>P</strong> | R${{ prices.P | currency }}</v-btn>
           <v-btn @click="selectSize('M')"><strong>M</strong> | R${{ prices.M | currency }}</v-btn>
@@ -44,9 +44,9 @@ const restaurantOpen = ref<boolean>(true);
 const route = useRoute();
 
 const prices = {
-  P: 10.0, 
-  M: 15.0, 
-  G: 20.0, 
+  P: 10.0,
+  M: 15.0,
+  G: 20.0,
 };
 
 const selectedSize = ref<string>('P');
