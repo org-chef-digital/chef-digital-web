@@ -8,7 +8,6 @@
        @edit-category="editCategory"
        @delete-category="deleteCategory" 
        @save-product="saveProduct"
-       @passing-id="fetchProducts"
        @delete-product="deleteProduct"
        @edit-product="editProduct"  
       />
@@ -34,9 +33,9 @@ interface Product {
     restaurant_id: string;
     availability: boolean;
     title: string;
-    id: string;
+    _id: string;
     price: number;
-    category_id: string;
+    category: string;
 }
 
 export default defineComponent({
@@ -162,8 +161,7 @@ export default defineComponent({
     },
     async fetchProducts() {
       try {
-        const restaurantId = localStorage.getItem("id");
-        const response = await api.get(`/products/all/restaurant/${restaurantId}`);
+        const response = await api.get(`/products/all/`);
         this.products = response.data.data;
       } catch (error) {
         console.error('Erro when searching product:', error);

@@ -56,14 +56,15 @@ export default defineComponent({
         saveProduct() {
             if (this.isValid) {
                 this.$emit('save-product', this.formData.productName, this.formData.productPrice, this.formData.availability, this.categoryId);
-                this.formData.categoryName = '';
+                console.log(this.categoryId);
+                this.formData.productName = '';
                 this.formData.productPrice = 0;
                 this.$emit('update:modelValue', false);
             }
         },
         cancel() {
             this.$emit('update:modelValue', false);
-            this.formData.categoryName = '';
+            this.formData.productName = '';
             this.formData.productPrice = 0;
         }
     }
