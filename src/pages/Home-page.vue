@@ -14,8 +14,6 @@
   </div>
 </template>
 
-
-
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { api } from '../services/api';
@@ -24,19 +22,8 @@ import modalCreate from '../components/modalCreate.vue';
 import modalEdit from '../components/modalEdit.vue';
 import cardCategories from '../components/cardCategories.vue';
 
-interface Category {
-  _id: string;
-  name: string;
-}
-
-interface Product {
-    restaurant_id: string;
-    availability: boolean;
-    title: string;
-    _id: string;
-    price: number;
-    category: string;
-}
+import { Category } from '@/services/categoryServices/categoryTypes';
+import { Product } from '@/services/productServices/productTypes';
 
 export default defineComponent({
   components: {

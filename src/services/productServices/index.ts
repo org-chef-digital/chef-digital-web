@@ -1,5 +1,6 @@
 import { api, responseError } from "../api";
 import { ApiResponse } from "../apiTypes";
+import { Category } from "../categoryServices/categoryTypes";
 import { Product } from "./productTypes";
 
 async function update(newProduct: Product) {
