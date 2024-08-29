@@ -43,6 +43,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { api } from '../services/api';
+import HomePage from '../pages/Home-page.vue';
+
 
 interface LoginData {
   visibility: string;
@@ -76,7 +78,8 @@ export default defineComponent({
         if (token) {
           localStorage.setItem('token', token);
           localStorage.setItem('id', id);
-          this.$router.push({ name: 'home' });
+          this.$router.push({ path: '/home' });
+          console.log("Login efetuado com sucesso");
         } else {
           console.error('Token JWT undefined.');
         }
