@@ -1,4 +1,3 @@
-
 <template>
   <v-responsive aspect-ratio="16/9">
     <v-container class="pagel">
@@ -27,8 +26,8 @@
             :rules="[rules.required]"
             @click:append="switchVisibility"
             variant="outlined"
-            ></v-text-field>
-            
+          ></v-text-field>
+          
           <v-btn class="btn-entrar" color="green" width="344" @click="login">Login</v-btn>
 
           <p class="tnpc text-lg-center">Don't have a registration?</p>
@@ -42,21 +41,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { api } from '../services/api';
-import HomePage from '../pages/Home-page.vue';
-
-
-interface LoginData {
-  visibility: string;
-  rules: {
-    required: (value: string) => boolean | string;
-  };
-  email: string;
-  password: string;
-}
+import { restaurantServices } from '../services/restaurantServices';
 
 export default defineComponent({
-  data(): LoginData {
+  name: 'LoginPage',
+  data() {
     return {
       visibility: 'password',
       rules: {
@@ -67,32 +56,27 @@ export default defineComponent({
     };
   },
   methods: {
-    async login(): Promise<void> {
+    async login() {
       try {
-        const response = await api.post('/auth/signin', {
+        const restaurantSignIn = {
           email: this.email,
           password: this.password,
-        });
-        const token = response.data.data.access_token;
-        const id = response.data.data.id;
-        if (token) {
-          localStorage.setItem('token', token);
-          localStorage.setItem('id', id);
+        };
+        const response = await restaurantServices.signIn(restaurantSignIn);
+        if (response.success) {
+          localStorage.setItem('token', response.data.access_token); 
+          localStorage.setItem('id', response.data.id);              
           this.$router.push({ path: '/home' });
           console.log("Login efetuado com sucesso");
         } else {
-          console.error('Token JWT undefined.');
+          console.error('Erro de Login:', response.message);
         }
       } catch (error) {
         console.error('Error login:', error);
       }
     },
-    switchVisibility(): void {
-      if (this.visibility === 'password') {
-        this.visibility = 'text';
-      } else {
-        this.visibility = 'password';
-      }
+    switchVisibility() {
+      this.visibility = this.visibility === 'password' ? 'text' : 'password';
     }
   }
 });

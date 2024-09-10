@@ -18,14 +18,14 @@ const router = createRouter({
       component: () => import('../pages/Login-page.vue')
     },
     {
-      path: '/register',
-      name: 'register',
-      component: () => import('../pages/Register-page.vue')
-    },
-    {
       path: '/home',
       name: 'home',
       component: () => import('../pages/Home-page.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../pages/Register-page.vue')
     },
     {
       path: '/analysis',
