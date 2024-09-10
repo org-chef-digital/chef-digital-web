@@ -22,7 +22,7 @@
                       <v-col cols="auto">
                         <v-btn @click="decreaseQuantity(product._id)" :disabled="quantities[product._id] <= 0">-</v-btn>
                         <span>{{ quantities[product._id] || 0 }}</span>
-                        <v-btn @click="increaseQuantity(product._id)" :disabled="isMaxQuantityReached()">+</v-btn>
+                        <v-btn @click="increaseQuantity(product._id, category.maxSelection)" :disabled="isMaxQuantityReached(category.maxSelection, product._id)">+</v-btn>
                       </v-col>
                     </v-row>
                   </v-card-title>
@@ -40,9 +40,10 @@
 
 <script setup lang="ts">
 import { defineProps, ref, computed } from 'vue';
+import { watch } from 'vue';
 
 const props = defineProps<{
-  categories: { _id: string; name: string }[];
+  categories: { _id: string; name: string; maxSelection: number }[];
   products: { _id: string; title: string; price: number; category_id: string }[];
   selectedSize: string;
 }>();
@@ -55,13 +56,22 @@ const maxQuantities = {
   'G': 6
 };
 
+// Reseta as quantidades quando o tamanho da marmita é alterado
+watch(() => props.selectedSize, () => {
+  quantities.value = {}; // Reseta todas as quantidades ao mudar o tamanho
+});
+
+
 const totalSelected = computed(() => {
   return Object.values(quantities.value).reduce((acc, quantity) => acc + quantity, 0);
 });
 
-function increaseQuantity(productId: string) {
+function increaseQuantity(productId: string, categoryMaxSelection: number) {
   const currentQuantity = quantities.value[productId] || 0;
-  if (currentQuantity < maxQuantities[props.selectedSize] && totalSelected.value < maxQuantities[props.selectedSize]) {
+  const totalSelectedInCategory = getTotalSelectedInCategory(productId);
+
+  // Verifica se já atingiu o máximo por categoria ou por tamanho da marmita
+  if (currentQuantity < categoryMaxSelection && totalSelectedInCategory < categoryMaxSelection && totalSelected.value < maxQuantities[props.selectedSize]) {
     quantities.value[productId] = currentQuantity + 1;
   }
 }
@@ -73,8 +83,20 @@ function decreaseQuantity(productId: string) {
   }
 }
 
-function isMaxQuantityReached() {
-  return totalSelected.value >= maxQuantities[props.selectedSize];
+function isMaxQuantityReached(categoryMaxSelection: number, productId: string) {
+  const totalSelectedInCategory = getTotalSelectedInCategory(productId);
+
+  return totalSelected.value >= maxQuantities[props.selectedSize] || totalSelectedInCategory >= categoryMaxSelection;
+}
+
+// Função para obter o total selecionado em uma categoria
+function getTotalSelectedInCategory(productId: string) {
+  const product = props.products.find(p => p._id === productId);
+  if (!product) return 0;
+
+  return props.products
+    .filter(p => p.category === product.category)
+    .reduce((acc, p) => acc + (quantities.value[p._id] || 0), 0);
 }
 
 function filteredProducts(categoryId: string) {

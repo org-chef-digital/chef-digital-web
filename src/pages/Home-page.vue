@@ -71,10 +71,10 @@ export default defineComponent({
       }
     },
 
-    async saveCategory(categoryName: string) {
+    async saveCategory(categoryName: string, maxSelection: number) {
       try {
         const restaurantId = localStorage.getItem("id");
-        const response = await api.post('/categories', { name: categoryName, restaurantId }, {
+        const response = await api.post('/categories', { name: categoryName, restaurantId, maxSelection }, {
           headers: {
             Authorization: `Bearer ${this.getToken()}`,
           },
