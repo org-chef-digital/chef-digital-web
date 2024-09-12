@@ -1,8 +1,9 @@
+<!-- Client-page -->
 <template>
   <v-responsive aspect-ratio="9/16">
     <div class="barraNav">
       <img src="../lib/logo.png" alt="logo" class="logomarca">
-      <CartButton />
+      <CartButton :selectedProduct="selectedProduct" :quantitiesProducts="quantitiesProducts"/>
     </div>
     <v-container>
       <template v-if="restaurantOpen">
@@ -15,7 +16,7 @@
           <v-btn @click="selectSize('P')"><strong>P</strong> | R${{ prices.P | currency }}</v-btn>
           <v-btn @click="selectSize('M')"><strong>M</strong> | R${{ prices.M | currency }}</v-btn>
           <v-btn @click="selectSize('G')"><strong>G</strong> | R${{ prices.G | currency }}</v-btn>
-          <List :categories="categories" :products="products" :selectedSize="selectedSize" />
+          <List :categories="categories" :products="products" :selectedSize="selectedSize" @update:quantity="handleProducts" />
           <br>
         </v-list>
 
@@ -51,10 +52,16 @@ const prices = {
 
 const selectedSize = ref<string>('P');
 const selectedPrice = ref<number>(prices[selectedSize.value]);
+const selectedProduct = ref<{ _id: string; title: string; price: number; category_id: string } | null>(null);
+const quantitiesProducts = ref<{ [key: string]: number }>({});
 
 function selectSize(size: 'P' | 'M' | 'G') {
   selectedSize.value = size;
   selectedPrice.value = prices[size];
+}
+
+function handleProducts(product: { _id: string; title: string; price: number; category_id: string }) {
+  selectedProduct.value = product;
 }
 
 async function fetchCategories() {

@@ -1,3 +1,4 @@
+<!-- CartButton -->
 <template>
     <v-btn v-if="restaurantOpen" text @click="openDialog" color="green">
         <v-icon class="mdi-cart">mdi-cart</v-icon>
@@ -12,7 +13,6 @@
                                 <v-row>
                                     <v-col>
                                         <v-list-item-title>{{ product.title }}</v-list-item-title>
-                                        <v-list-item-subtitle>R$ {{ product.price.toFixed(2) }}</v-list-item-subtitle>
                                     </v-col>
                                     <v-col cols="auto">
                                         <v-btn icon="mdi-delete" @click="removeProduct(product._id)" variant="plain"
@@ -37,7 +37,7 @@
                 </v-form>
             </v-card-text>
             <v-card-actions class="buttonsPurchase">
-                <v-btn color="blue" text @click="showFinishBuyModal = false">Adicionar mais itens</v-btn>
+                <v-btn color="blue" text @click="handleAddMoreItems">Adicionar mais itens</v-btn>
                 <v-btn color="green darken-1" text @click="finalizarPedido">Finalizar</v-btn>
             </v-card-actions>
         </v-card>
@@ -49,6 +49,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { api } from '../services/api';
+import { watch } from 'vue';
 
 import { Product } from '@/services/productServices/productTypes';
 const products = ref<Product[]>([]);
@@ -62,6 +63,16 @@ const valid = ref(true);
 const tipoEnvio = ref<string | null>(null);
 const tipoPagamento = ref<string | null>(null);
 
+const props = defineProps<{
+  selectedProduct: { _id: string; title: string; price: number } | null;
+}>();
+
+// Reatividade para buscar o produto quando `selectedProduct` mudar
+watch(() => props.selectedProduct, (newProduct) => {
+    if (newProduct) {
+        fetchProductById(newProduct._id);
+    }
+}, { immediate: true });
 
 const restaurantOpen = ref<boolean>(true);
 const route = useRoute();
@@ -82,12 +93,16 @@ async function fetchCategories() {
     }
 };
 
-async function fetchProducts() {
+async function fetchProductById(productId: string) {
     try {
-        const response = await api.get(`/products/all`);
-        products.value = response.data.data;
+        const response = await api.get(`/products/${productId}`);
+        const product = response.data.data;
+        // Adiciona o produto à lista existente, se ainda não estiver na lista
+        if (!products.value.some(p => p._id === product._id)) {
+            products.value.push(product);
+        }
     } catch (error) {
-        console.error('Erro ao buscar produtos:', error);
+        console.error('Erro ao buscar produto:', error);
     }
 }
 
@@ -122,6 +137,11 @@ async function fetchRestaurantPhone() {
     }
 };
 
+
+const handleAddMoreItems = () => {
+  showFinishBuyModal.value = false;
+};
+
 const finalizarPedido = () => {
     if (!tipoEnvio.value || !tipoPagamento.value) {
         alert("Por favor, selecione o tipo de envio e pagamento.");
@@ -138,7 +158,7 @@ const finalizarPedido = () => {
 
     // Construir a lista de produtos
     const produtosTexto = products.value.map(product => {
-        return `${product.title} - R$ ${product.price.toFixed(2)}`;
+        return `${product.title}`;
     }).join(', ');
 
     let mensagem = `Gostaria de fazer um pedido. Produtos: ${produtosTexto}. Tipo de entrega: ${tipoEnvioTexto}. Forma de pagamento: ${pagamentoTexto}.`;
@@ -156,7 +176,6 @@ onMounted(async () => {
     await fetchCategories();
     await checkRestaurantStatus();
     await fetchRestaurantPhone();
-    await fetchProducts()
 
     if (!restaurantOpen.value) {
         categories.value = [];

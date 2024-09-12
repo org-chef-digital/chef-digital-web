@@ -1,3 +1,4 @@
+<!-- CategoriesList -->
 <template>
   <v-container>
     <v-row>
@@ -22,7 +23,7 @@
                       <v-col cols="auto">
                         <v-btn @click="decreaseQuantity(product._id)" :disabled="quantities[product._id] <= 0">-</v-btn>
                         <span>{{ quantities[product._id] || 0 }}</span>
-                        <v-btn @click="increaseQuantity(product._id, category.maxSelection)" :disabled="isMaxQuantityReached(category.maxSelection, product._id)">+</v-btn>
+                        <v-btn @click="increaseQuantity(product, category.maxSelection)" :disabled="isMaxQuantityReached(category.maxSelection, product._id)">+</v-btn>
                       </v-col>
                     </v-row>
                   </v-card-title>
@@ -40,12 +41,17 @@
 
 <script setup lang="ts">
 import { defineProps, ref, computed } from 'vue';
+import { Product } from '@/services/productServices/productTypes';
 import { watch } from 'vue';
 
 const props = defineProps<{
   categories: { _id: string; name: string; maxSelection: number }[];
   products: { _id: string; title: string; price: number; category_id: string }[];
   selectedSize: string;
+}>();
+
+const emit = defineEmits<{
+  (event: 'update:quantity', product: Product, quantities): void;
 }>();
 
 const quantities = ref<{ [key: string]: number }>({});
@@ -66,22 +72,29 @@ const totalSelected = computed(() => {
   return Object.values(quantities.value).reduce((acc, quantity) => acc + quantity, 0);
 });
 
-function increaseQuantity(productId: string, categoryMaxSelection: number) {
-  const currentQuantity = quantities.value[productId] || 0;
-  const totalSelectedInCategory = getTotalSelectedInCategory(productId);
+function increaseQuantity(product: Product, categoryMaxSelection: number) {
+  const currentQuantity = quantities.value[product._id] || 0;
+  const totalSelectedInCategory = getTotalSelectedInCategory(product._id);
 
   // Verifica se já atingiu o máximo por categoria ou por tamanho da marmita
-  if (currentQuantity < categoryMaxSelection && totalSelectedInCategory < categoryMaxSelection && totalSelected.value < maxQuantities[props.selectedSize]) {
-    quantities.value[productId] = currentQuantity + 1;
+  if (currentQuantity < categoryMaxSelection &&
+      totalSelectedInCategory < categoryMaxSelection &&
+      totalSelected.value < maxQuantities[props.selectedSize]) {
+    const newQuantity = currentQuantity + 1; // Define newQuantity aqui
+    quantities.value[product._id] = newQuantity;
+    emit('update:quantity', product, quantities); // Use newQuantity aqui
   }
 }
+
 
 function decreaseQuantity(productId: string) {
   const currentQuantity = quantities.value[productId] || 0;
   if (currentQuantity > 0) {
-    quantities.value[productId] = currentQuantity - 1;
+    const newQuantity = currentQuantity - 1; // Define newQuantity aqui
+    quantities.value[productId] = newQuantity;
   }
 }
+
 
 function isMaxQuantityReached(categoryMaxSelection: number, productId: string) {
   const totalSelectedInCategory = getTotalSelectedInCategory(productId);
